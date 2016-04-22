@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset="UTF-8">
+  <title>OSICAlytics</title>
+
+        <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">  
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
+<script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script src="app/app.js"></script>
+  </head> 
+  
+  <body>
+<div ng-app="osicApp" ng-controller="scoreCtrl as ctrl" class="container">
+  <div class="hero-unit">
+    <h1>Show me the numbers!</h1>
+      
+  </div>
+  
+  <div class="panel panel-default">
+    <div class="panel-heading">
+      <h3 class="panel-title">Choose a date range</h3>
+    </div>
+    
+    <!-- PANEL BODY -->
+    <div class="panel-body">
+      <div class="form-group">
+        <div class="input-group">
+          <div class="input-group-addon">from</div>
+          <input type="date" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate">
+          <div class="input-group-addon">to</div>
+          <input type="date" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate">
+        </div>
+        <div class="container-btn-results">
+        <button type="button" class="btn btn-primary btn-lg btn-block" ng-click="getNumbers()">Get Numbers</button>
+        </div>
+      </div>
+    </div> <!-- END PANEL BODY -->
+    
+  </div> <!-- END PANEL -->
+  
+  <!-- STARTS RESULTS CONTAINER -->
+
+  
+  <div class="row">
+    
+    <div class="col-xs-12 metrics-filter">
+      <div class="row">
+        <div class="col-md-2">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">All modules</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Horizon</a></li>
+              <li><a href="#">Nova</a></li>
+              <li><a href="#">Cinder</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">All releases</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Newton (Current)</a></li>
+              <li><a href="#">Mitaka</a></li>
+            </ul>
+            
+          </div>
+        </div>
+        <div class="col-md-2">
+          <div class="btn-group">
+            <button type="button" class="btn btn-default">All hats</button>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Intel</a></li>
+              <li><a href="#">Rackspace</a></li>
+            </ul>
+            
+          </div>
+        </div>
+        <div class="col-md-6 export-csv">
+<button type="button" class="btn btn-success">Export to CSV</button>
+
+        </div>
+      </div>
+    </div>
+    
+  </div>
+  <div class="row">
+   
+    <div class="col-xs-12 col-md-7">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">The data</h3>
+        </div>
+        <div class="panel-body">
+        <table class="table">
+        <thead>
+          <tr>
+            <th>Metric</th>
+            <th>#</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th>Commits (actual changes upstream)</th>
+            <td>{{ commits }}</td>
+          </tr>
+          <tr>
+            <th>Completed Blueprints</th>
+            <td>{{ bpc }}</td>
+          </tr>
+          <tr>
+            <th>Drafted Blueprints</th>
+            <td>{{ bpd }}</td>
+          </tr>
+          <tr>
+            <th>Filed bugs</th>
+            <td>{{ filed_bugs }}</td>
+          </tr>
+          <tr>
+            <th>Resolved bugs</th>
+            <td>{{ resolved_bugs }}</td>
+          </tr>
+          <tr>
+            <th>Reviews</th>
+            <td>{{ marks }}</td>
+          </tr>
+          <tr>
+            <th>Patches</th>
+            <td>{{ patches }}</td>
+          </tr>
+        </tbody>
+      </table>
+        </div>
+      </div>
+      
+    </div>
+    <div class="col-xs-12 col-md-5">
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Shiny pie chart</h3>
+        </div>
+        <div class="panel-body">
+        Goes here
+        </div>
+      </div>
+      
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title">Users in this filter</h3>
+        </div>
+        <div class="panel-body">
+        list of users comma-separated
+        </div>
+      </div>
+    </div>
+  </div> <!-- ENDS RESULTS CONTAINER -->
+  
+  
+
+  
+  {{ data }}
+</div> 
+  </body>
+
+  
+</html>
