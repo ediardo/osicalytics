@@ -7,7 +7,7 @@ TODO:
  */
 app.factory('myFactory', function($http, $q) {
   var service = {},
-      baseUrl = 'http://stackalytics.openstack.org/api/1.0/stats/engineers?callback=JSON_CALLBACK&release=all&',
+      baseUrl = 'http://stackalytics.openstack.org/api/1.0/stats/engineers?callback=JSON_CALLBACK&',
       _finalUrls = {},
       _release,
       _metricsType,
@@ -17,8 +17,9 @@ app.factory('myFactory', function($http, $q) {
       _members,
       _memberStats,
       _utcOffset = -18000;
+      _modules = []
   
-  var makeUrl = function() {
+  var makeUrl = function(release, module, company) {
     angular.forEach(_metricsType, function(metric, idx) {
       _metricsType[idx].url = baseUrl +
                               'start_date=' +
@@ -26,6 +27,16 @@ app.factory('myFactory', function($http, $q) {
                               'end_date=' + 
                               _endDate + '&' +
                               'metric=' + metric.code + '&'
+
+      if(release != null){
+        _metricsType[idx].url += 'release=' + release.id + "&"; 
+      }
+      if(module != null){
+        _metricsType[idx].url += 'module=' + module.id + "&";                     
+      }
+      if(company != null){
+         _metricsType[idx].url += 'company=' + company.id + "&";
+      }
     });
   }
   
@@ -48,10 +59,18 @@ app.factory('myFactory', function($http, $q) {
   service.setMembers = function(members) {
     _members = members;
   }
+
+  service.setModules = function(modules){
+    _modules = modules;
+  }
   
-  service.getNumbers = function() {
+  service.getModules = function(modules){
+    return _modules;
+  }
+
+  service.getNumbers = function(release, module, company) {
     var promises = [];
-    makeUrl();
+    makeUrl(release, module, company);
     angular.forEach(_metricsType, function(metric, idx) {
       var deferred = $q.defer();
       $http.jsonp(metric.url)
@@ -111,11 +130,7 @@ app.factory('myFactory', function($http, $q) {
 
 app.controller('scoreCtrl', function($scope, $http, myFactory) {
   var users = {}, 
-      modules = [],
-      hats = [],
       metrics = [];
-  modules = ['horizon', 'neutron', 'keystone', 'osa', 'cinder', 'nova'];
-  hats = ['intel', 'rax'];
   metrics = [
     {code: 'commits', name: 'Commits'},
     {code: 'bpc', name: 'Completed Blueprints'},
@@ -124,119 +139,141 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     {code: 'resolved-bugs', name: 'Resolved Bugs'},
     {code: 'marks', name: 'Reviews'}
   ];
+
+  //$scope.selectedModule = null;
+  
+  $http({
+    method: 'GET',
+    url:'http://stackalytics.openstack.org/api/1.0/modules'
+  }).then(function (response){
+    $scope.modules = response.data.data
+  })
+  
+  $http({
+    method: 'GET',
+    url:'http://stackalytics.openstack.org/api/1.0/releases'
+  }).then(function (response){
+    $scope.releases = response.data.data.splice(1, response.data.data.length)
+  })
+  
+  $scope.hats = [
+    {text: "Intel" , id:"intel"}, 
+    {text: "Rax", id:"rackspace"}
+  ]
+
   users = {
     'ediardo': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'horizon'
     }, 
     'jlopezgu': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'horizon'
     }, 
     'luis-daniel-castellanos': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'horizon'
     },
     'electrocucaracha': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'neutron'
     },
     'ankur-gupta-f': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'neutron'
     },
     'saisrikiran-mudigonda': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'neutron'
     },
     'smigiel-dariusz': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'neutron'
     },
     'yalei-wang': {
-      hat: 'intel',
+      hat: 'Intel',
       project: 'neutron'
     },
     'yamahata': {
-      hat: 'intel',
+      hat: 'Intel',
       project: 'neutron' 
     }, 
     'lubosz-kosnik': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'neutron'
     },
     'npustchi': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'keystone'
     },
     'ronald-de-rose': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'keystone'
     },
     'npustchi': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'keystone'
     },
     'ronald-de-rose': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'keystone'
     },
     'wei-d-chen': {
-      hat: 'intel',
+      hat: 'Intel',
       project: 'keystone'
     },
     'dolph': {
-      hat: 'rax',
+      hat: 'Rax',
       project: 'keystone'
     },
     'xek': {
-      hat: 'intel',
+      hat: 'Intel',
       project: 'keystone'
     },
     'theizaakk': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'osa'
     },
     'raddaoui-ala': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'osa'
     },
     'kprabhuv': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'cinder'
     },
     'bluex': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'cinder'
     },
     'pushkar-umaranikar': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'nova'
     }, 
     'xuhj': {
-      hat: 'intel',
+      hat: 'Intel',
       dedicated: true,
       project: 'nova'
     },
     'sfinucane': {
-      hat: 'intel',
+      hat: 'Intel',
       project: 'nova'
     }
   };
@@ -246,10 +283,10 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     
     myFactory.setMetricsType(metrics);
     myFactory.setMembers(users);
-    myFactory.setHats(hats)
+    myFactory.setHats($scope.hats)
     myFactory.setStartDate($scope.startDate);
     myFactory.setEndDate($scope.endDate);
-    myFactory.getNumbers();
+    myFactory.getNumbers($scope.selectedRelease, $scope.selectedModule, $scope.seletedHat);
     
     setTimeout(function() {
       $scope.$apply(function() {
