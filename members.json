@@ -1,0 +1,19 @@
+{
+  "members": [
+      "ediardo": {
+        "hat": "intel",
+        "project: ["horizon"],
+        "dedicated": true
+      },
+      "jlopezgu": {
+        "hat": "intel",
+        "dedicated": true,
+        "project: ["horizon"]
+      },
+      "luis-daniel-castellanos": {
+        "hat": "intel",
+        "dedicated": true,
+        "project": ["horizon"]
+      }
+  ]
+}
