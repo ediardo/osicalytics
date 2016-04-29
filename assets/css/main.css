@@ -1,0 +1,60 @@
+/*
+
+  TODO: Use this file to import other SCSS Files ONLY
+*/
+html, body {
+  height: 100%;
+}
+
+body {
+  background: url(../images/OSIC_frame_ghost.png) no-repeat right center #edf2f7;
+}
+
+header {
+  background-color: #040508;
+  border-bottom: 5px solid #a51b1b;
+  margin-bottom: 20px;
+}
+header .navbar {
+  margin-bottom: 0px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+header .navbar-inverse {
+  background-color: transparent;
+  border: 0;
+}
+header #logo {
+  height: 50px;
+  width: 159px;
+}
+
+.container-btn-results {
+  margin-top: 15px;
+}
+
+.panel-reviews .panel-heading {
+  background-color: #BDCE67;
+}
+
+.panel-commits .panel-heading {
+  background-color: #D4986A;
+}
+
+.panel-deployed .panel-heading {
+  background-color: #41837E;
+}
+
+thead {
+  font-size: 1.4em;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #F0F0F0;
+}
+
+.export-csv {
+  text-align: right;
+}
+
+/*# sourceMappingURL=main.css.map */
