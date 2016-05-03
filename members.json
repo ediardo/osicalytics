@@ -14,6 +14,39 @@
         "hat": "intel",
         "dedicated": true,
         "project": ["horizon"]
+      },
+      "electrocucaracha" : {
+        "hat": "intel",
+        "dedicated" true,
+        "project": ["neutron"]
+      },
+      "ankur-gupta-f": {
+        "hat": "intel",
+        "dedicated": true,
+        "project": ["neutron"]
+      },
+      "saisrikiran-mudigonda": {
+        "hat": "intel",
+        "dedicated": true,
+        "project": ["neutron"]
+      },
+      "smigiel-dariusz": {
+        "hat": "intel",
+        "dedicated": true,
+        "project": ["neutron"]
+      },
+      "yalei-wong": {
+        "hat": "intel",
+        "project": ["neutron"],
+      },
+      "yamahata": {
+        "hat": "intel",
+        "project": ["neutron"],
+      },
+      "lubosz-kosnik": {
+        "hat": "intel",
+        "dedicated": true,
+        "project": ["neutron"]
       }
   ]
 }
