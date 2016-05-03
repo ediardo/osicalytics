@@ -1,11 +1,39 @@
+
 /*
 
   TODO: Use this file to import other SCSS Files ONLY
 */
+html, body {
+  height: 100%;
+}
 body {
-  background-color: #FAFAFA;
+  background: url(../images/OSIC_frame_ghost.png) no-repeat right center #edf2f7;
 }
 
+header {
+  background-color: #040508;
+  border-bottom: 5px solid #a51b1b;
+  margin-bottom: 20px;
+
+  .navbar {
+    margin-bottom: 0px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+
+  .navbar-inverse {
+    background-color: transparent;
+    border: 0;
+  }
+
+  #logo {
+    height: 50px;
+    width: 159px;
+  }
+}
+#main {
+
+}
 .container-btn-results {
   margin-top: 15px;  
 }
@@ -28,9 +56,6 @@ body {
   }
 }
 
-.metrics-filter {
-  margin-bottom: 15px;
-}
 thead {
   font-size: 1.4em;
 }

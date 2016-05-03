@@ -1,0 +1,14 @@
+{
+  "name": "osicalytics",
+  "homepage": "https://github.com/ediardo/osicalytics",
+  "description": "OpenStack Analytics of OSIC",
+  "main": "",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
