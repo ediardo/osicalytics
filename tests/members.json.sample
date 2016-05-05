@@ -1,0 +1,140 @@
+{
+  "members": [
+    {
+      "launchpad_id": "ediardo",
+      "hat": "intel",
+      "project": ["horizon"],
+      "dedicated": true
+    },
+    {
+      "launchpad_id": "jlopezgu",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["horizon"]
+    },
+    {
+      "launchpad_id": "luis-daniel-castellanos",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["horizon"]
+    },
+    {
+      "launchpad_id": "electrocucaracha",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "ankur-gupta-f",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "saisrikiran-mudigonda",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "smigiel-dariusz",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "yalei-wong",
+      "hat": "intel",
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "yamahata",
+      "hat": "intel",
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id" : "lubosz-kosnik",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "anusha-unnam",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["nova"]
+    },
+    {
+      "launchpad_id": "aradhana1.singh",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "bluex",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["cinder"]
+    },
+    {
+      "launchpad_id": "castulo-martinez",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["qa"]
+    },
+    {
+      "launchpad_id": "ganesh-mahalingam",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["swift"]
+    },
+    {
+      "launchpad_id": "inc007",
+      "hat": "intel",
+      "dedicated": true,
+      "project": []
+    },
+    {
+      "launchpad_id": "joshua-l-white",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["qa"]
+    },
+    {
+      "launchpad_id": "karthik-prabhu-vinod",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["cinder"]
+    },
+    {
+      "launchpad_id": "lianhau-lu",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["ceilometer"]
+    },
+    {
+      "launchpad_id": "luz-cazarez",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["qa"]
+    },
+    {
+      "launchpad_id": "manjeet-s-bhatia",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["neutron"]
+    },
+    {
+      "launchpad_id": "michael-w-turvey",
+      "hat": "intel",
+      "dedicated": true,
+      "project": []
+    },
+    {
+      "launchpad_id": "mohit-motiani",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["swift"]
+    }
+  ]
+}
