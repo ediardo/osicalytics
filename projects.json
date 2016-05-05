@@ -1,0 +1,16 @@
+{
+  "projects": [
+    { "name": "nova", "group": "compute" },
+    { "name": "magnum", "group": "compute" },
+    { "name": "osa", "group": "deployment" },
+    { "name": "ref", "group": "deployment" },
+    { "name": "horizon", "group": "metrics/ui" },
+    { "name": "ceilometer", "group": "metrics/ui" },
+    { "name": "neutron", "group": "network/identity" },
+    { "name": "keystone", "group": "network/identity" },
+    { "name": "qa", "group": "network/identity" },
+    { "name": "security", "group": "security"}
+    { "name": "cinder", "group": "storage"}
+    { "name": "swift", "group": "storage"}
+  }
+}

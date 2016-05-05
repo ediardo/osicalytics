@@ -1,4 +1,9 @@
 {
+  "projects": [
+    {"name": "neutron", "group": "network/identity"},
+    {"name": "nova", "group": "compute"},
+    {"name": "cinder", "group": "storage"}
+  ],
   "members": [
     {
       "launchpad_id": "ediardo",
@@ -135,111 +140,6 @@
       "hat": "intel",
       "dedicated": true,
       "project": ["swift"]
-    },
-    {
-      "launchpad_id": "mszankin",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "nandini-tata",
-      "hat": "intel",
-      "project": ["swift"]
-    },
-    {
-      "launchpad_id":  "npustchi",
-      "hat": "intel",
-      "project": ["keystone"]
-    },
-    {
-      "launchpad_id": "ntpttr",
-      "hat": "intel",
-      "project": []
-    },
-    {
-      "launchpad_id": "paul-dardeau",
-      "hat": "intel",
-      "project": ["swift"]
-    },
-    {
-      "launchpad_id": "paul-e-luse",
-      "hat": "intel",
-      "project": ["swift"]
-    },
-    {
-      "launchpad_id": "pushkar-umaranikar",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "raddaoui-ala",
-      "hat": "intel",
-      "project": ["osa"]
-    },
-    {
-      "launchpad_id": "rahulunair",
-      "hat": "intel",
-      "project": ["security"]
-    },
-    {
-      "launchpad_id": "ronald-de-rose",
-      "hat": "intel",
-      "project": ["keystone"]
-    },
-    {
-      "launchpad_id": "sarafraj-singh",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "sfinucane",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "shashirekha-j-gundur",
-      "hat": "intel",
-      "project": ["swift"]
-    },
-    {
-      "launchpad_id": "siva-radhakrishnan",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "sujitha-neti",
-      "hat": "intel",
-      "project": ["nova"]
-    },
-    {
-      "launchpad_id": "sumant-murke",
-      "hat": "intel",
-      "project": ["ceilometer"]
-    },
-    {
-      "launchpad_id": "theizaakk",
-      "hat": "intel",
-      "project": ["osa"]
-    },
-    {
-      "launchpad_id": "vinay-potluri",
-      "hat": "intel",
-      "project": ["security"]
-    },
-    {
-      "launchpad_id": "wei-d-chen",
-      "hat": "intel",
-      "project": ["keystone"]
-    },
-    {
-      "launchpad_id": "xek",
-      "hat": "intel",
-      "project": ["keystone"]
-    },
-    {
-      "launchpad_id": "xuhj",
-      "hat": "intel",
-      "project": ["nova"]
     }
   ]
 }
