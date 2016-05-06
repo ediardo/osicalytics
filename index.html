@@ -40,9 +40,15 @@
                   <input type="date" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate">
                   <div class="input-group-addon">to</div>
                   <input type="date" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate">
+
                 </div>
               </div>
             </div> <!-- END PANEL BODY -->
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <button class="btn-sm btn-primary" ng-click="getNumbers()">Get the numbers</button>
+            </div>
           </div>
         </div> <!-- END PANEL -->
   
@@ -55,7 +61,7 @@
     <div class="col-xs-12 metrics-filter">
       <div class="row">
         <div class="col-md-2">
-          <select class="form-control" ng-options="module.text for module in modules track by module.id" ng-model="selectedModule">
+          <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onModuleChange()">
             <option value="">All Modules</option>
           </select>  
         </div>
@@ -68,6 +74,21 @@
           <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="seletedHat">
             <option value="">All Hats</option>
           </select> 
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div> 
+  </div>
+
+   <div class="panel panel-default" ng-if="projectMembers.length > 0">
+  <div class="panel-body">
+  <div class="row">
+    <div class="col-xs-12 metrics-filter">
+      <div class="row">
+        <div class="col-md-2" ng-repeat="member in projectMembers">
+          <label class="radio-inline"><input type="radio" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{member.launchpad_id}}</label>
         </div>
       </div>
     </div>
