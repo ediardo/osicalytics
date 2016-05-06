@@ -16,10 +16,11 @@ app.factory('myFactory', function($http, $q) {
       _metrics = [],
       _members,
       _memberStats,
-      _utcOffset = -18000;
-      _modules = []
+      _utcOffset = -18000,
+      _modules = [],
+      _osicModules = [];
   
-  var makeUrl = function(release, module, company) {
+  var makeUrl = function(release, module, company, selectedMember) {
     angular.forEach(_metricsType, function(metric, idx) {
       _metricsType[idx].url = baseUrl +
                               'start_date=' +
@@ -28,14 +29,17 @@ app.factory('myFactory', function($http, $q) {
                               _endDate + '&' +
                               'metric=' + metric.code + '&'
 
-      if(release != null){
+      if(release != null && release != undefined){
         _metricsType[idx].url += 'release=' + release.id + "&"; 
       }
-      if(module != null){
-        _metricsType[idx].url += 'module=' + module.id + "&";                     
+      if(module != null && module != undefined){
+        _metricsType[idx].url += 'module=' + module.name + "&";                     
       }
-      if(company != null){
+      if(company != null && company != undefined){
          _metricsType[idx].url += 'company=' + company.id + "&";
+      }
+      if(selectedMember != null && selectedMember != undefined){
+         _metricsType[idx].url += 'user_id=' + selectedMember + "&";
       }
     });
   }
@@ -63,14 +67,18 @@ app.factory('myFactory', function($http, $q) {
   service.setModules = function(modules){
     _modules = modules;
   }
+
+  service.osicModules = function(osicModules){
+    _osicModules = osicModules;
+  }
   
   service.getModules = function(modules){
     return _modules;
   }
 
-  service.getNumbers = function(release, module, company) {
+  service.getNumbers = function(release, module, company, selectedMember) {
     var promises = [];
-    makeUrl(release, module, company);
+    makeUrl(release, module, company, selectedMember);
     angular.forEach(_metricsType, function(metric, idx) {
       var deferred = $q.defer();
       $http.jsonp(metric.url)
@@ -118,9 +126,9 @@ app.factory('myFactory', function($http, $q) {
   }
   
   var findMembers = function(allMembers) {
-    
+    memberIds = _members.map(function(member){return member.launchpad_id;})
     return allMembers.filter(function(member, idx) {
-      if (member.id in _members) 
+      if (memberIds.includes(member.id)) 
         return member.metric;
     });
   }
@@ -139,9 +147,11 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     {code: 'resolved-bugs', name: 'Resolved Bugs'},
     {code: 'marks', name: 'Reviews'}
   ];
-
-  //$scope.selectedModule = null;
   
+  $http.get('projects.json').then(function(response){
+    $scope.osicModules = response.data.projects;
+  });
+
   $http({
     method: 'GET',
     url:'http://stackalytics.openstack.org/api/1.0/modules'
@@ -161,132 +171,41 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     {text: "Rax", id:"rackspace"}
   ]
 
-  users = {
-    'ediardo': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'horizon'
-    }, 
-    'jlopezgu': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'horizon'
-    }, 
-    'luis-daniel-castellanos': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'horizon'
-    },
-    'electrocucaracha': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'neutron'
-    },
-    'ankur-gupta-f': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'neutron'
-    },
-    'saisrikiran-mudigonda': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'neutron'
-    },
-    'smigiel-dariusz': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'neutron'
-    },
-    'yalei-wang': {
-      hat: 'Intel',
-      project: 'neutron'
-    },
-    'yamahata': {
-      hat: 'Intel',
-      project: 'neutron' 
-    }, 
-    'lubosz-kosnik': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'neutron'
-    },
-    'npustchi': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'keystone'
-    },
-    'ronald-de-rose': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'keystone'
-    },
-    'npustchi': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'keystone'
-    },
-    'ronald-de-rose': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'keystone'
-    },
-    'wei-d-chen': {
-      hat: 'Intel',
-      project: 'keystone'
-    },
-    'dolph': {
-      hat: 'Rax',
-      project: 'keystone'
-    },
-    'xek': {
-      hat: 'Intel',
-      project: 'keystone'
-    },
-    'theizaakk': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'osa'
-    },
-    'raddaoui-ala': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'osa'
-    },
-    'kprabhuv': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'cinder'
-    },
-    'bluex': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'cinder'
-    },
-    'pushkar-umaranikar': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'nova'
-    }, 
-    'xuhj': {
-      hat: 'Intel',
-      dedicated: true,
-      project: 'nova'
-    },
-    'sfinucane': {
-      hat: 'Intel',
-      project: 'nova'
-    }
-  };
+  $scope.members = [];
+  $scope.projectMembers = [];
 
-  
+  $http.get('members.json').then(function(response){
+    $scope.members = response.data.members;
+  });
+
+  $scope.onModuleChange = function(){
+    if($scope.selectedModule != null && $scope.selectedModule != undefined){
+      $scope.projectMembers = $scope.members.filter(function(member){
+        
+        if(member.project.includes($scope.selectedModule.name)){
+          return member;
+        }
+
+      });
+    }
+    else{
+      $scope.projectMembers = [];
+    }
+  }
+
+  $scope.onSelectedMember = function (caller) {
+    console.log(caller.selectedMember);
+    $scope.selectedMember = caller.selectedMember;
+  }
+
   $scope.getNumbers = function() {
     
     myFactory.setMetricsType(metrics);
-    myFactory.setMembers(users);
+    myFactory.setMembers($scope.members);
     myFactory.setHats($scope.hats)
     myFactory.setStartDate($scope.startDate);
     myFactory.setEndDate($scope.endDate);
-    myFactory.getNumbers($scope.selectedRelease, $scope.selectedModule, $scope.seletedHat);
+    myFactory.getNumbers($scope.selectedRelease, $scope.selectedModule, $scope.seletedHat, $scope.selectedMember);
     
     setTimeout(function() {
       $scope.$apply(function() {
