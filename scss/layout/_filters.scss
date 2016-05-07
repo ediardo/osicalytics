@@ -1,0 +1,14 @@
+.container-time-frames {
+
+  margin-bottom: 15px;
+  
+  .time-frames-group {
+    text-align: center;
+    &:first-child {
+      text-align: left ;
+    }
+    &:last-child {
+      text-align: right;
+    }
+  }
+}
