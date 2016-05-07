@@ -1,4 +1,13 @@
-var app = angular.module("osicApp", []);
+var app = angular.module("osicApp", ['ui.bootstrap']);
+app.factory('timeFrames', function() {
+  var service = {},
+      weeks,
+      months,
+      quarters;
+
+  
+  return service;
+});
 /*
 TODO:
  - Get json for the Hats (companies) we really care about
@@ -165,7 +174,59 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
   }).then(function (response){
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
-  
+ 
+  $scope.dateOptions = {
+    maxDate: new Date(),
+    showWeeks: true 
+  };
+  $scope.dateFormat = 'MM/dd/yyyy';
+  $scope.openStartDate = function() {
+    $scope.popupStartDate.opened = true;
+    console.log('asda');
+  };
+  $scope.openEndDate= function() {
+    $scope.popupEndDate.opened = true;
+  };
+  $scope.popupStartDate = {
+    opened: false
+  };
+  $scope.popupEndDate = {
+    opened: false
+  };
+  $scope.setTimeFrame = function(timeFrame) {
+    var today = new Date(),
+        year = today.getFullYear(),
+        month = today.getMonth(),
+        day = today.getDate()
+        quarter = Math.floor((month + 3) / 3);
+
+    switch(timeFrame) {
+      case 'currentWeek':
+        $scope.startDate = new Date(year, month, day - today.getDay());
+        $scope.endDate = today;
+        break;
+      case 'previousWeek':
+        $scope.startDate = new Date(year, month, day - today.getDay() - 7);
+        $scope.endDate= new Date(year, month, day - today.getDay() -1);
+        break;
+      case 'currentMonth':
+        $scope.startDate = new Date(year, month, 1);
+        $scope.endDate = new Date(year, month + 1, 0);
+        break;
+      case 'previousMonth':
+        $scope.startDate = new Date(year, month - 1, 1);
+        $scope.endDate = new Date(year, month, 0);
+        break;
+      case 'currentQuarter':
+        $scope.startDate = new Date(year, quarter * 3 - 3, 1);
+        $scope.endDate = new Date(year, (quarter + 1) * 3 - 3, 0);
+        break;
+      case 'previousQuarter':
+        $scope.startDate = new Date(year, (quarter - 1) * 3 - 3 , 1);
+        $scope.endDate = new Date(year, quarter  * 3 - 3, 0);
+        break;
+    }   
+  };
   $scope.hats = [
     {text: "Intel" , id:"intel"}, 
     {text: "Rax", id:"rackspace"}
