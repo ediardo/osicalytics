@@ -198,7 +198,6 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     opened: false
   };
 
-  // This function sets start/end time frames
   $scope.setTimeFrame = function(timeFrame) {
     var today = new Date(),
         year = today.getFullYear(),
@@ -234,14 +233,10 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     }   
   };
 
-
-  $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
-    if (newValues) {
-      $scope.getNumbers();    
-    }
+  $scope.$watchCollections(['startDate', ['endDate'], function (newValues, oldValues) {
+    console.log(newValues);
     
   });
-
   $scope.hats = [
     {text: "Intel" , id:"intel"}, 
     {text: "Rax", id:"rackspace"}
