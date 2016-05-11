@@ -21,13 +21,32 @@ module.exports = function(grunt) {
     },
     watch: {
       css: {
-        files: '**/*.scss',
-        tasks: ['sass']
+        files: [
+                '**/*.scss',
+                'app/app.js',
+                'app/directives/*.js',
+                'app/services/*.js'
+               ],
+        tasks: ['sass', 'concat']
+      }
+    },
+    concat: {
+      options: {
+        separator: '\n\n'
+      },
+      dist: {
+        src: [
+              'app/directives/*.js',
+              'app/services/*.js',
+              'app/app.js'
+        ],
+        dest: 'app/app.concat.js'
       }
     }
   });
 
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.registerTask('default', ['connect', 'watch']);
