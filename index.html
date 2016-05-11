@@ -8,7 +8,7 @@
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
   <script src="assets/js/vendor/ui-bootstrap-tpls-1.3.2.min.js"></script>
-  <script src="app/app.js"></script>
+  <script src="app/app.concat.js"></script>
   <link href="assets/css/main.css" rel="stylesheet">  
   </head> 
   
@@ -66,42 +66,39 @@
                 </div>
               </div>
             </div>
-
-            <div class="col-xs-12">
-              <!-- PANEL BODY -->
-                <div class="form-group">
-                  <div class="row">
-                    <div class="col-xs-12 col-sm-6">
-                      <div class="input-group">
-                        <div class="input-group-addon">from</div>
-                        <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}">
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-default" ng-click="openStartDate()">
-                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                          </button>
-                        </span>
+            <form name="timeFrames">
+              <div class="col-xs-12">
+                <!-- PANEL BODY -->
+                  <div class="form-group">
+                    <div class="row">
+                      <div class="col-xs-12 col-sm-6">
+                        <div class="input-group">
+                          <div class="input-group-addon">from</div>
+                          <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates >
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openStartDate()">
+                              <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                            </button>
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                    <div class="col-xs-12 col-sm-6">
-                      <div class="input-group">
-                        <div class="input-group-addon">to</div>
-                        <input type="text" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate" is-open="popupEndDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}">
-                        <span class="input-group-btn">
-                          <button type="button" class="btn btn-default" ng-click="openEndDate()">
-                            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                          </button>
-                        </span>
+                      <div class="col-xs-12 col-sm-6">
+                        <div class="input-group">
+                          <div class="input-group-addon">to</div>
+                          <input type="text" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate" is-open="popupEndDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}"  ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates>
+
+                          <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="openEndDate()">
+                              <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                            </button>
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div> <!-- END PANEL BODY -->
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              <button class="btn-sm btn-primary" ng-click="getNumbers()">Get the numbers</button>
-            </div>
+                </div> <!-- END PANEL BODY -->
+              </div>
+            </form>
           </div>
         </div> <!-- END PANEL -->
         <!-- ENDS TIME FRAME FILTER PANE --> 
