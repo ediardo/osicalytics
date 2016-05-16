@@ -165,31 +165,31 @@
         <tbody>
           <tr>
             <th>Commits (actual changes upstream)</th>
-            <td>{{ commits }}</td>
+            <td>{{ metrics.commits.total }}</td>
           </tr>
           <tr>
             <th>Completed Blueprints</th>
-            <td>{{ bpc }}</td>
+            <td>{{ metrics.bpc.total }}</td>
           </tr>
           <tr>
             <th>Drafted Blueprints</th>
-            <td>{{ bpd }}</td>
+            <td>{{ metrics.bpd.total }}</td>
           </tr>
           <tr>
             <th>Filed bugs</th>
-            <td>{{ filed_bugs }}</td>
+            <td>{{ metrics.filed_bugs.total }}</td>
           </tr>
           <tr>
             <th>Resolved bugs</th>
-            <td>{{ resolved_bugs }}</td>
+            <td>{{ metrics.resolved_bugs.total }}</td>
           </tr>
           <tr>
             <th>Reviews</th>
-            <td>{{ marks }}</td>
+            <td>{{ metrics.marks.total }}</td>
           </tr>
           <tr>
             <th>Patches</th>
-            <td>{{ patches }}</td>
+            <td>{{ metrics.patches.total }}</td>
           </tr>
         </tbody>
       </table>

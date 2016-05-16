@@ -13,13 +13,13 @@ app.factory('timeFrames', function() {
 });
 /*
 TODO:
- - Get json for the Hats (companies) we really care about
+ - Remove unsused variables/methods
  - Use D3 to render a pie chart
  - A message showing a "Loading" or something for UX purposes
  */
 app.factory('myFactory', function($http, $q) {
   var service = {},
-      baseUrl = 'http://stackalytics.openstack.org/api/1.0/stats/engineers?callback=JSON_CALLBACK&',
+      baseUrl = 'http://stackalytics.openstack.org/api/1.0',
       _finalUrls = {},
       _release,
       _metricsType,
@@ -32,54 +32,98 @@ app.factory('myFactory', function($http, $q) {
       _modules = [],
       _osicModules = [];
   
-  var makeUrl = function(release, module, company, selectedMember) {
-    angular.forEach(_metricsType, function(metric, idx) {
-      _metricsType[idx].url = baseUrl +
-                              'start_date=' +
-                              _startDate + '&' +
-                              'end_date=' + 
-                              _endDate + '&' +
-                              'metric=' + metric.code + '&'
-
-      if(release != null && release != undefined){
-        _metricsType[idx].url += 'release=' + release.id + "&"; 
-      }
-      if(module != null && module != undefined){
-        _metricsType[idx].url += 'module=' + module.name + "&";                     
-      }
-      if(company != null && company != undefined){
-         _metricsType[idx].url += 'company=' + company.id + "&";
-      }
-      if(selectedMember != null && selectedMember != undefined){
-         _metricsType[idx].url += 'user_id=' + selectedMember + "&";
-      }
-    });
-  }
-  
-  service.setMetricsType = function(metrics) {
-    _metricsType = metrics;
-  }
-  
-  service.setHats = function(hats) {
-    _hats = hats;
-  }
-  
-  service.setStartDate = function(startDate) {
-    _startDate = startDate.getTime() / 1000 - _utcOffset; 
-  }
-  
-  service.setEndDate = function(endDate) {
-    _endDate = endDate.getTime() / 1000 - _utcOffset; 
-  }
-  
   service.setMembers = function(members) {
     _members = members;
   }
 
-  service.setModules = function(modules){
-    _modules = modules;
+  /*
+    Returns a query string suitable for a GET request
+    { foo: 'value1', foo2: 'value2'} -> foo=value1&foo2=value2
+  */
+  var paramsToQuery = function (params) {
+    var query = [];
+    angular.forEach(params, function(value, name) {
+      this.push(name + '=' + value);
+    }, query);
+    return query.join('&');
+  };
+
+  /*
+    Returns a string with URL pointing to Stackalytics API
+  */
+  var buildUrl = function(url, params) {
+    return baseUrl + url + '?' + paramsToQuery(params) + '&callback=JSON_CALLBACK';
+  };
+
+  /*
+    Filter only those users we care about
+  */
+  var filterData = function(data, byKey) {
+    // Get all IDs from our list of users for fitltering
+    memberIds = _members.map(function(member){return member.launchpad_id;})
+    return data.filter(function(obj, idx) {
+      if (memberIds.includes(obj[byKey])) {
+        return obj;
+      }
+    });
+  };
+
+  /*
+    Prepare Data
+  */
+  var prepareData = function(data, fields) {
+    return data.filter(function(obj, idx) {
+      angular.forEach(fields, function(value, field) {
+        this[field] = value;
+      }, obj);
+      return obj;
+    });
+  };
+
+  service.calculateMetrics = function(metrics) {
+    var calculatedMetrics = {};
+    angular.forEach(metrics, function(metric, idx) {
+      safeMetricCode = metric.metric_code.replace('-', '_');
+      if (!(safeMetricCode in calculatedMetrics)) {
+        calculatedMetrics[safeMetricCode] = {};
+        calculatedMetrics[safeMetricCode]['total'] = 0;
+        calculatedMetrics[safeMetricCode]['intel'] = 0;
+        calculatedMetrics[safeMetricCode]['rackspace'] = 0;
+        calculatedMetrics[safeMetricCode]['members'] = [];
+      }
+      calculatedMetrics[safeMetricCode]['members'].push(metric);
+      calculatedMetrics[safeMetricCode]['total'] += metric.metric;
+      if (metric.company == 'intel') {
+        calculatedMetrics[safeMetricCode]['intel'] += metric.metric;
+      } else if (metric.company == 'rackspace') {
+        calculatedMetrics[safeMetricCode]['rackspace'] += metric.metric;
+      }
+
+    });
+
+    return calculatedMetrics;
   }
 
+
+  var setMetric = function(metricType,  metric) {
+    _metrics[metricType] = metric; 
+  }
+
+  /* 
+    Get Metric
+  */
+  service.getMetric = function(params) {
+    var url = buildUrl('/stats/engineers', params);
+    return $http.jsonp(url).then(function(response) {
+      data = filterData(response.data.stats, 'id', params.metric);
+      return prepareData(data, {metric_code: params.metric, company: params.company });
+    });
+  };
+
+  service.getActivity = function(params) {
+    var url = buildUrl('/activity', params);
+  };
+ 
   service.osicModules = function(osicModules){
     _osicModules = osicModules;
   }
@@ -87,68 +131,11 @@ app.factory('myFactory', function($http, $q) {
   service.getModules = function(modules){
     return _modules;
   }
-
-  service.getNumbers = function(release, module, company, selectedMember) {
-    var promises = [];
-    makeUrl(release, module, company, selectedMember);
-    angular.forEach(_metricsType, function(metric, idx) {
-      var deferred = $q.defer();
-      $http.jsonp(metric.url)
-        .success(function(data) {
-          deferred.resolve(data);
-        }).error(function(data, status) {
-          deferred.reject(status)
-      });
-      deferred.promise.code = metric.code;
-      promises.push(deferred.promise);
-    });
-    
-    $.when(promises).then(calculateMetrics);
-    /*
-    .success(function(data) {
-        mem = findMembers(_members, data.stats)
- 
-      }).error(function() {
-        // TODO: on error
-      });
-      */
-  }
-
-  var calculateMetrics = function(promises) {
-    angular.forEach(promises, function(promise, idx) {
-      var metricType = promise.code;
-      promise.then(function(data){
-        members = findMembers(data.stats);
-        setMetric(metricType, calculateMetric(members, 'metric'));
-      })
-    })
-  }
-  var setMetric = function(metricType,  metric) {
-    _metrics[metricType] = metric; 
-  }
-  
-  service.getMetric = function(metricType) {
-    return _metrics[metricType];
-  }
-  
-  var calculateMetric = function(stats, prop) {
-    return stats.reduce(function(a, b) {
-      return a + b[prop];
-    }, 0);
-  }
-  
-  var findMembers = function(allMembers) {
-    memberIds = _members.map(function(member){return member.launchpad_id;})
-    return allMembers.filter(function(member, idx) {
-      if (memberIds.includes(member.id)) 
-        return member.metric;
-    });
-  }
   
   return service;
 });
 
-app.controller('scoreCtrl', function($scope, $http, myFactory) {
+app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
   var users = {}, 
       metrics = [];
   metrics = [
@@ -157,6 +144,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     {code: 'bpd', name: 'Drafted Blueprints'},
     {code: 'patches', name:'Patches'},
     {code: 'resolved-bugs', name: 'Resolved Bugs'},
+    {code: 'filed-bugs', name: 'Filed Bugs'},
     {code: 'marks', name: 'Reviews'}
   ];
   
@@ -212,7 +200,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
     switch(timeFrame) {
       case 'currentWeek':
         $scope.startDate = new Date(year, month, day - today.getDay());
-        $scope.endDate = today;
+        $scope.endDate = new Date(year, month, day);
         break;
       case 'previousWeek':
         $scope.startDate = new Date(year, month, day - today.getDay() - 7);
@@ -239,7 +227,8 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
 
 
   $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
-    if (newValues) {
+    if (newValues[0] != undefined || newValues[1] !== undefined) {
+      console.log(newValues);
       $scope.getNumbers();    
     }
     
@@ -278,27 +267,37 @@ app.controller('scoreCtrl', function($scope, $http, myFactory) {
   }
 
   $scope.getNumbers = function() {
-    
-    myFactory.setMetricsType(metrics);
+    var promises = [];
+    angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled 
     myFactory.setMembers($scope.members);
-    myFactory.setHats($scope.hats)
-    myFactory.setStartDate($scope.startDate);
-    myFactory.setEndDate($scope.endDate);
-    myFactory.getNumbers($scope.selectedRelease, $scope.selectedModule, $scope.seletedHat, $scope.selectedMember);
-    
-    setTimeout(function() {
-      $scope.$apply(function() {
-        $scope.commits = myFactory.getMetric('commits');  
-        $scope.bpd = myFactory.getMetric('bpd');  
-        $scope.bpc = myFactory.getMetric('bpc');
-        $scope.marks = myFactory.getMetric('marks');
-        $scope.resolved_bugs = myFactory.getMetric('resolved-bugs');
-        $scope.filed_bugs = myFactory.getMetric('filed-bugs');
-        $scope.patches= myFactory.getMetric('patches');
-      })
-      
-    }, 2700);
-   
+    console.log('getNumbers');
+
+    angular.forEach(metrics, function(metric) {
+      // get metrics for Rackspace
+      promises.push(
+        myFactory.getMetric({
+          start_date: $scope.startDate.getTime() / 1000 - 1800,
+          end_date: $scope.endDate.getTime() / 1000 - 1800,
+          metric: metric.code,
+          company: 'rackspace'
+        })
+      );
+      // get metrics for Intel
+      promises.push(
+        myFactory.getMetric({
+          start_date: $scope.startDate.getTime() / 1000 - 1800,
+          end_date: $scope.endDate.getTime() / 1000 - 1800,
+          metric: metric.code,
+          company: 'intel'
+        })
+      );       
+    });
+    // All promises have been resolved
+    $q.all(promises).then(function (metrics) {
+      angular.element(document.querySelectorAll('.time-frames-group button')).removeClass('disabled');
+      $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
+    })
+  
   }
   
 });
