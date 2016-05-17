@@ -10,13 +10,13 @@ app.factory('timeFrames', function() {
 });
 /*
 TODO:
- - Remove unsused variables/methods
+ - Remove unused variables/methods (ediardo)
  - Use D3 to render a pie chart
  - A message showing a "Loading" or something for UX purposes
  */
 app.factory('myFactory', function($http, $q) {
   var service = {},
-      baseUrl = 'http://stackalytics.openstack.org/api/1.0',
+      baseUrl = 'http://stackalytics.com/api/1.0',
       _finalUrls = {},
       _release,
       _metricsType,
@@ -111,6 +111,7 @@ app.factory('myFactory', function($http, $q) {
   */
   service.getMetric = function(params) {
     var url = buildUrl('/stats/engineers', params);
+    console.log(url);
     return $http.jsonp(url).then(function(response) {
       data = filterData(response.data.stats, 'id', params.metric);
       return prepareData(data, {metric_code: params.metric, company: params.company });
@@ -276,7 +277,8 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
           start_date: $scope.startDate.getTime() / 1000 - 1800,
           end_date: $scope.endDate.getTime() / 1000 - 1800,
           metric: metric.code,
-          company: 'rackspace'
+          company: 'rackspace',
+          release: 'all'
         })
       );
       // get metrics for Intel
@@ -285,7 +287,8 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
           start_date: $scope.startDate.getTime() / 1000 - 1800,
           end_date: $scope.endDate.getTime() / 1000 - 1800,
           metric: metric.code,
-          company: 'intel'
+          company: 'intel',
+          release: 'all'
         })
       );       
     });
