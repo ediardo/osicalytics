@@ -1,14 +1,4 @@
 @charset "UTF-8";
-@import url(vendor/bootstrap-datepicker3.min.css);
-.container-time-frames {
-  margin-bottom: 15px; }
-  .container-time-frames .time-frames-group {
-    text-align: center; }
-    .container-time-frames .time-frames-group:first-child {
-      text-align: left; }
-    .container-time-frames .time-frames-group:last-child {
-      text-align: right; }
-
 /*!
  *  Font Awesome 4.6.2 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
@@ -2187,63 +2177,4 @@
   overflow: visible;
   clip: auto; }
 
-/*
-
-  TODO: Use this file to import other SCSS Files ONLY
-*/
-html, body {
-  height: 100%; }
-
-body {
-  background: url(../images/OSIC_frame_ghost.png) no-repeat right center #edf2f7; }
-
-header {
-  background-color: #040508;
-  border-bottom: 5px solid #a51b1b;
-  margin-bottom: 20px; }
-  header .navbar {
-    margin-bottom: 0px;
-    padding-top: 20px;
-    padding-bottom: 20px; }
-  header .navbar-inverse {
-    background-color: transparent;
-    border: 0; }
-  header #logo {
-    height: 50px;
-    width: 159px; }
-
-.container-btn-results {
-  margin-top: 15px; }
-
-.panel-reviews .panel-heading {
-  background-color: #BDCE67; }
-
-.panel-commits .panel-heading {
-  background-color: #D4986A; }
-
-.panel-deployed .panel-heading {
-  background-color: #41837E; }
-
-thead {
-  font-size: 1.4em; }
-
-tbody tr:nth-child(odd) {
-  background-color: #F0F0F0; }
-
-.export-csv {
-  text-align: right; }
-
-#tooltip {
-  color: white;
-  opacity: .9;
-  background: #53565A;
-  padding: 5px;
-  border: 1px solid #B1BABF;
-  border-radius: 5px;
-  position: absolute;
-  font-size: 14px;
-  z-index: 10;
-  visibility: hidden;
-  pointer-events: none; }
-
-/*# sourceMappingURL=main.css.map */
+/*# sourceMappingURL=font-awesome.css.map */
