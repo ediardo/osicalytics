@@ -7,13 +7,15 @@
   <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" crossorigin="anonymous"></script>
   <script src="assets/js/vendor/ui-bootstrap-tpls-1.3.2.min.js"></script>
-  <script src="app/app.concat.js"></script>
+  <script src="assets/js/charts/charts.js"></script>
+  <script src="app/app.js"></script>
   <link href="assets/css/main.css" rel="stylesheet">  
   </head> 
   
   <body>
-
+  <div id="tooltip"></div>
     <div ng-app="osicApp" ng-controller="scoreCtrl as ctrl">
       <!-- HEADER -->
       <header>
@@ -140,6 +142,9 @@
         <div class="col-md-2" ng-repeat="member in projectMembers">
           <label class="radio-inline"><input type="radio" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{member.launchpad_id}}</label>
         </div>
+        <div class="col-md-3">
+          <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
+        </div>
       </div>
     </div>
     
@@ -205,7 +210,9 @@
  Charts</h3>
         </div>
         <div class="panel-body">
+        <div class="chart-container", id="chartContainer">
         Goes here
+        </div>
         </div>
       </div>
       

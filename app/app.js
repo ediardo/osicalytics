@@ -264,6 +264,10 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     $scope.selectedMember = caller.selectedMember;
   }
 
+  $scope.clearSelectedMember = function(){
+    $scope.selectedMember = null;
+    $('input[name="memberRadio"]').attr('checked', false);
+  }
   $scope.getNumbers = function() {
     var promises = [];
     angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled 
@@ -296,6 +300,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     $q.all(promises).then(function (metrics) {
       angular.element(document.querySelectorAll('.time-frames-group button')).removeClass('disabled');
       $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
+      charts.sunburst("#chartContainer", $scope.metrics)
     })
   
   }
