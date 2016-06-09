@@ -85,7 +85,7 @@ var charts = (function($, d3){
 
 				if(data[metric].rackspace > 0){
 
-					newData.children[0].children.push({
+					newData.children[1].children.push({
 						id: metric,
 						text: metric,
 						size: data[metric].rackspace,
@@ -110,11 +110,21 @@ var charts = (function($, d3){
 	return {
 		sunburst: function(containerId, data){
 			data = prepareData(data);
-			$(containerId).height($("body").height() * 0.45)
+			$(containerId).height($("body").height() * 0.40 + 50)
 			$(containerId).html('');
 			var w = $(containerId).width(),
-			h = $(containerId).height(),
-			color = d3.scale.category20c(),
+			h = $(containerId).height(),		
+			color2 = {
+				marks: "#b1babf",
+				commits: "#0071C5",
+				bpc: "#003C71",
+				bpd: "#F3D54E",
+				patches: "#C4D600",
+				resolved_bugs: "#FFA300",
+				filed_bugs:"#00AEEF",
+				Intel:"#0071C5",
+				Rackspace: "#CC1835"
+			}
 			radius = Math.min(w, h) * .48;
 
 			var svg = d3.select(containerId).append("svg")
@@ -135,7 +145,7 @@ var charts = (function($, d3){
 				.attr("display", function(d) { return d.depth ? null : "none"; }) 
 		        .attr("d", getArc)
 		        .style("stroke", "#fff")
-		        .style("fill", function(d) { return color((d.children ? d : d.parent).text); })
+		        .style("fill", function(d) { return color2[(d.children ? d : d.parent).text]; })
 		        .style("fill-rule", "evenodd")
 		        .each(stash);
 

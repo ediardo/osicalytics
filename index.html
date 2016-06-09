@@ -118,12 +118,12 @@
           </select>  
         </div>
         <div class="col-md-2">
-          <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease">
+          <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease" ng-change="onReleaseChange()">
            <option value="">All Releases</option>
           </select> 
         </div>
         <div class="col-md-2">
-          <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="seletedHat">
+          <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
             <option value="">All Hats</option>
           </select> 
         </div>
@@ -206,11 +206,27 @@
       
       <div class="panel panel-default">
         <div class="panel-heading">
-          <h3 class="panel-title"> <i class="fa fa-pie-chart" aria-hidden="true"></i>
- Charts</h3>
+          <h3 class="panel-title">
+           <i class="fa pie-chart" aria-hidden="true" style="color:#003C71;"></i> Charts             
+          </h3>
         </div>
         <div class="panel-body">
-        <div class="chart-container", id="chartContainer">
+          <div class="row" style="height:50px;">
+            <div class="col-md-4">
+              <i class="fa fa-circle" aria-hidden="true" style="color:#003C71;"></i> BPC <br/>
+              <i class="fa fa-circle" aria-hidden="true" style="color:#b1babf;"></i> Reviews <br/>
+            </div>
+            <div class="col-md-4">
+              <i class="fa fa-circle" aria-hidden="true" style="color:#0071C5;"></i> Commits <br/>
+              <i class="fa fa-circle" aria-hidden="true" style="color:#F3D54E;"></i> BPD <br/>
+            </div>
+            <div class="col-md-4">
+              <i class="fa fa-circle" aria-hidden="true" style="color:#C4D600;"></i> Patch Sets <br/>
+              <i class="fa fa-circle" aria-hidden="true" style="color:#FFA300;"></i> Resolved Bugs <br/>
+              <i class="fa fa-circle" aria-hidden="true" style="color:#00AEEF;"></i> Filed Bugs
+            </div>
+          </div>
+          <div class="chart-container", id="chartContainer">
         Goes here
         </div>
         </div>

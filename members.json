@@ -13,6 +13,18 @@
       "project": ["horizon"]
     },
     {
+      "launchpad_id": "david-lyle",
+      "hat": "intel",
+      "dedicated": true,
+      "project": ["horizon"]
+    },
+    {
+      "launchpad_id": "r1chardj0n3s",
+      "hat": "rackspace",
+      "dedicated": true,
+      "project": ["horizon"]
+    },
+    {
       "launchpad_id": "luis-daniel-castellanos",
       "hat": "intel",
       "dedicated": true,
