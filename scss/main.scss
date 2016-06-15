@@ -1,3 +1,5 @@
+//@import "base/vars";
+@import "base/globals";
 // LAYOUT
 @import "layout/filters";
 
@@ -42,7 +44,7 @@ header {
 
 }
 .container-btn-results {
-  margin-top: 15px;  
+  margin-top: 15px;
 }
 
 .panel-reviews {
@@ -54,7 +56,7 @@ header {
 .panel-commits {
   .panel-heading {
     background-color: #D4986A;
-  } 
+  }
 }
 
 .panel-deployed {

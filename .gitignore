@@ -1,3 +1,4 @@
+app/app.concat.js
 node_modules/
 bower_components/
 # swap
@@ -5,3 +6,4 @@ bower_components/
 [._]s[a-w][a-z]
 #sass cache
 .sass-cache/
+*.map

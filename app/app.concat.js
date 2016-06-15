@@ -43,7 +43,9 @@ app.factory('myFactory', function($http, $q) {
   var paramsToQuery = function (params) {
     var query = [];
     angular.forEach(params, function(value, name) {
-      this.push(name + '=' + value);
+      if(value !== null && value !== undefined && value !== ''){
+        this.push(name + '=' + value);
+      }
     }, query);
     return query.join('&');
   };
@@ -162,7 +164,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
   
   $http({
     method: 'GET',
-    url:'http://stackalytics.openstack.org/api/1.0/releases'
+    url:'http://stackalytics.com/api/1.0/releases'
   }).then(function (response){
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
@@ -260,6 +262,15 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     else{
       $scope.projectMembers = [];
     }
+    $scope.getNumbers();
+  }
+
+  $scope.onReleaseChange = function(){
+    $scope.getNumbers();
+  }
+
+  $scope.onHatChange = function(){
+    $scope.getNumbers();
   }
 
   $scope.onSelectedMember = function (caller) {
@@ -267,6 +278,10 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     $scope.selectedMember = caller.selectedMember;
   }
 
+  $scope.clearSelectedMember = function(){
+    $scope.selectedMember = null;
+    $('input[name="memberRadio"]').attr('checked', false);
+  }
   $scope.getNumbers = function() {
     var promises = [];
     angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled 
@@ -275,30 +290,37 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
 
     angular.forEach(metrics, function(metric) {
       // get metrics for Rackspace
-      promises.push(
-        myFactory.getMetric({
-          start_date: $scope.startDate.getTime() / 1000 - 1800,
-          end_date: $scope.endDate.getTime() / 1000 - 1800,
-          metric: metric.code,
-          company: 'rackspace',
-          release: 'all'
-        })
-      );
+      if($scope.selectedHat == undefined || $scope.selectedHat.id == 'rackspace' ){
+        promises.push(
+          myFactory.getMetric({
+            start_date: $scope.startDate.getTime() / 1000 - 1800,
+            end_date: $scope.endDate.getTime() / 1000 - 1800,
+            metric: metric.code,
+            company: 'rackspace',
+            release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
+            module: $scope.selectedModule ? $scope.selectedModule.name : ''
+          })
+        );
+      }
       // get metrics for Intel
-      promises.push(
-        myFactory.getMetric({
-          start_date: $scope.startDate.getTime() / 1000 - 1800,
-          end_date: $scope.endDate.getTime() / 1000 - 1800,
-          metric: metric.code,
-          company: 'intel',
-          release: 'all'
-        })
-      );       
+      if($scope.selectedHat == undefined || $scope.selectedHat.id == 'intel' ){
+        promises.push(
+          myFactory.getMetric({
+            start_date: $scope.startDate.getTime() / 1000 - 1800,
+            end_date: $scope.endDate.getTime() / 1000 - 1800,
+            metric: metric.code,
+            company: 'intel',
+            release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
+            module: $scope.selectedModule ? $scope.selectedModule.name : ''
+          })
+        );   
+      }    
     });
     // All promises have been resolved
     $q.all(promises).then(function (metrics) {
       angular.element(document.querySelectorAll('.time-frames-group button')).removeClass('disabled');
       $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
+      charts.sunburst("#chartContainer", $scope.metrics)
     })
   
   }

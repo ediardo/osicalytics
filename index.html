@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html>
   <head>
-  <meta charset="UTF-8">
-  <title>OSICAlytics</title>
-  <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">  
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
-  <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" crossorigin="anonymous"></script>
-  <script src="assets/js/vendor/ui-bootstrap-tpls-1.3.2.min.js"></script>
-  <script src="assets/js/charts/charts.js"></script>
-  <script src="app/app.js"></script>
-  <link href="assets/css/main.css" rel="stylesheet">  
-  </head> 
-  
+    <meta charset="UTF-8">
+    <title>OSICAlytics</title>
+    <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.min.js" crossorigin="anonymous"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="assets/js/charts/charts.js"></script>
+    <script src="app/app.js"></script>
+    <link href="assets/css/main.css" rel="stylesheet">
+  </head>
+
   <body>
-  <div id="tooltip"></div>
+    <div id="tooltip"></div>
     <div ng-app="osicApp" ng-controller="scoreCtrl as ctrl">
       <!-- HEADER -->
       <header>
@@ -26,222 +26,253 @@
         </nav>
       </header>
       <!-- ENDS HEADER -->
-    
+
       <!-- CONTAINER -->
-      <div class="container" id="main"> 
+      <div class="container" id="main">
 
-      <!-- TIME FRAME FILTER PANE -->
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-calendar" aria-hidden="true"></i>
- Choose a time frame</h3>
-        </div>
-        
-        <div class="panel-body">
-          <div class="row">
-
-            <div class="col-xs-12 container-time-frames"> 
-              <div class="row">
-                <div class="col-xs-12 col-sm-3 time-frames-group">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentWeek')">This week</button>
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousWeek')">Previous week</button>
-                  </div>  
-                </div>
-                <div class="col-xs-12 col-sm-3 time-frames-group">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentMonth')">This month</button>
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousMonth')">Previous month</button>
-                  </div>  
-                </div>
-                <div class="col-xs-12 col-sm-3 time-frames-group">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentQuarter')">This quarter</button>
-                    <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousQuarter')">Previous quarter</button>
-                  </div>  
-                </div>
-                <div class="col-xs-12 col-sm-3 time-frames-group">
-                  <div class="btn-group" role="group" aria-label="...">
-                    <button type="button" class="btn btn-default disabled" ng-click="setTimeFrame('currentRelease')">This release</button>
-                    <button type="button" class="btn btn-default disabled" ng-click="setTimeFrame('previousRelease')">Previous release</button>
-                  </div>  
-                </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-calendar" aria-hidden="true"></i> Choose a time frame</h3>
               </div>
-            </div>
-            <form name="timeFrames">
-              <div class="col-xs-12">
-                <!-- PANEL BODY -->
-                  <div class="form-group">
+
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-xs-12 container-time-frames">
                     <div class="row">
-                      <div class="col-xs-12 col-sm-6">
-                        <div class="input-group">
-                          <div class="input-group-addon">from</div>
-                          <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates >
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openStartDate()">
-                              <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                            </button>
-                          </span>
+                      <div class="col-xs-12 col-sm-3 time-frames-group">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentWeek')">This week</button>
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousWeek')">Previous week</button>
                         </div>
                       </div>
-                      <div class="col-xs-12 col-sm-6">
-                        <div class="input-group">
-                          <div class="input-group-addon">to</div>
-                          <input type="text" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate" is-open="popupEndDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}"  ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates>
-
-                          <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-click="openEndDate()">
-                              <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
-                            </button>
-                          </span>
+                      <div class="col-xs-12 col-sm-3 time-frames-group">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentMonth')">This month</button>
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousMonth')">Previous month</button>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-sm-3 time-frames-group">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('currentQuarter')">This quarter</button>
+                          <button type="button" class="btn btn-default" ng-click="setTimeFrame('previousQuarter')">Previous quarter</button>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 col-sm-3 time-frames-group">
+                        <div class="btn-group" role="group" aria-label="...">
+                          <button type="button" class="btn btn-default disabled" ng-click="setTimeFrame('currentRelease')">This release</button>
+                          <button type="button" class="btn btn-default disabled" ng-click="setTimeFrame('previousRelease')">Previous release</button>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div> <!-- END PANEL BODY -->
+
+                  <form name="timeFrames">
+                    <div class="col-xs-12">
+                    <!-- PANEL BODY -->
+                      <div class="form-group">
+                        <div class="row">
+                          <div class="col-xs-12 col-sm-6">
+                            <div class="input-group">
+                              <div class="input-group-addon">from</div>
+                              <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates >
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openStartDate()">
+                                  <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                </button>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="col-xs-12 col-sm-6">
+                            <div class="input-group">
+                              <div class="input-group-addon">to</div>
+                              <input type="text" class="form-control" id="range.end" placeholder="mm/dd/yyyy" ng-model="endDate" is-open="popupEndDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}"  ng-minlength="10" ng-maxlength="10" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates>
+                              <span class="input-group-btn">
+                                <button type="button" class="btn btn-default" ng-click="openEndDate()">
+                                  <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
+                                </button>
+                              </span>
+                            </div> <!--div.input-group -->
+                          </div>
+                        </div>
+                      </div>
+                    </div> <!-- END PANEL BODY -->
+                  </form>
+                </div>
+              </div> <!-- END PANEL -->
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-xs-12 metrics-filter">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onModuleChange()">
+                          <option value="">All Modules</option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease" ng-change="onReleaseChange()">
+                          <option value="">All Releases</option>
+                        </select>
+                      </div>
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
+                          <option value="">All Hats</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </form>
-          </div>
-        </div> <!-- END PANEL -->
-        <!-- ENDS TIME FRAME FILTER PANE --> 
-  <!-- STARTS RESULTS CONTAINER -->
-
-  
-   <div class="panel panel-default">
-  <div class="panel-body">
-  <div class="row">
-    <div class="col-xs-12 metrics-filter">
-      <div class="row">
-        <div class="col-md-2">
-          <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onModuleChange()">
-            <option value="">All Modules</option>
-          </select>  
-        </div>
-        <div class="col-md-2">
-          <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease" ng-change="onReleaseChange()">
-           <option value="">All Releases</option>
-          </select> 
-        </div>
-        <div class="col-md-2">
-          <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
-            <option value="">All Hats</option>
-          </select> 
-        </div>
-      </div>
-    </div>
-    
-  </div>
-</div> 
-  </div>
-
-   <div class="panel panel-default" ng-if="projectMembers.length > 0">
-  <div class="panel-body">
-  <div class="row">
-    <div class="col-xs-12 metrics-filter">
-      <div class="row">
-        <div class="col-md-2" ng-repeat="member in projectMembers">
-          <label class="radio-inline"><input type="radio" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{member.launchpad_id}}</label>
-        </div>
-        <div class="col-md-3">
-          <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
-        </div>
-      </div>
-    </div>
-    
-  </div>
-</div> 
-  </div>
-  <div class="row">
-   
-    <div class="col-xs-12 col-md-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title"><i class="fa fa-table" aria-hidden="true"></i>
- The data</h3>
-        </div>
-        <div class="panel-body">
-        <table class="table">
-        <thead>
-          <tr>
-            <th>Metric</th>
-            <th>#</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <th>Commits (actual changes upstream)</th>
-            <td>{{ metrics.commits.total }}</td>
-          </tr>
-          <tr>
-            <th>Completed Blueprints</th>
-            <td>{{ metrics.bpc.total }}</td>
-          </tr>
-          <tr>
-            <th>Drafted Blueprints</th>
-            <td>{{ metrics.bpd.total }}</td>
-          </tr>
-          <tr>
-            <th>Filed bugs</th>
-            <td>{{ metrics.filed_bugs.total }}</td>
-          </tr>
-          <tr>
-            <th>Resolved bugs</th>
-            <td>{{ metrics.resolved_bugs.total }}</td>
-          </tr>
-          <tr>
-            <th>Reviews</th>
-            <td>{{ metrics.marks.total }}</td>
-          </tr>
-          <tr>
-            <th>Patches</th>
-            <td>{{ metrics.patches.total }}</td>
-          </tr>
-        </tbody>
-      </table>
-        </div>
-      </div>
-      
-    </div>
-    <div class="col-xs-12 col-md-6">
-      
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3 class="panel-title">
-           <i class="fa pie-chart" aria-hidden="true" style="color:#003C71;"></i> Charts             
-          </h3>
-        </div>
-        <div class="panel-body">
-          <div class="row" style="height:50px;">
-            <div class="col-md-4">
-              <i class="fa fa-circle" aria-hidden="true" style="color:#003C71;"></i> BPC <br/>
-              <i class="fa fa-circle" aria-hidden="true" style="color:#b1babf;"></i> Reviews <br/>
-            </div>
-            <div class="col-md-4">
-              <i class="fa fa-circle" aria-hidden="true" style="color:#0071C5;"></i> Commits <br/>
-              <i class="fa fa-circle" aria-hidden="true" style="color:#F3D54E;"></i> BPD <br/>
-            </div>
-            <div class="col-md-4">
-              <i class="fa fa-circle" aria-hidden="true" style="color:#C4D600;"></i> Patch Sets <br/>
-              <i class="fa fa-circle" aria-hidden="true" style="color:#FFA300;"></i> Resolved Bugs <br/>
-              <i class="fa fa-circle" aria-hidden="true" style="color:#00AEEF;"></i> Filed Bugs
             </div>
           </div>
-          <div class="chart-container", id="chartContainer">
-        Goes here
         </div>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="panel panel-default" ng-if="projectMembers.length > 0">
+              <div class="panel-body">
+                <div class="row">
+                  <div class="col-xs-12 metrics-filter">
+                    <div class="row">
+                      <div class="col-md-2" ng-repeat="member in projectMembers">
+                        <label class="radio-inline"><input type="radio" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{member.launchpad_id}}</label>
+                      </div>
+                      <div class="col-md-3">
+                        <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-xs-12 col-md-5 metrics-summary">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-table" aria-hidden="true"></i> Summary</h3>
+              </div>
+              <div class="panel-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Metric</th>
+                      <th>Count</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th>Commits (actual changes upstream)</th>
+                      <td class="-align-right">{{ metrics.commits.total || 0  }}</td>
+                    </tr>
+                    <tr>
+                      <th>Completed Blueprints</th>
+                      <td class="-align-right">{{ metrics.bpc.total || 0 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Drafted Blueprints</th>
+                      <td class="-align-right">{{ metrics.bpd.total || 0 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Filed bugs</th>
+                      <td class="-align-right">{{ metrics.filed_bugs.total || 0 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Resolved bugs</th>
+                      <td class="-align-right">{{ metrics.resolved_bugs.total || 0 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Reviews</th>
+                      <td class="-align-right">{{ metrics.marks.total || 0 }}</td>
+                    </tr>
+                    <tr>
+                      <th>Patches</th>
+                      <td class="-align-right">{{ metrics.patches.total || 0 }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xs-12 col-md-7">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="fa fa-pie-chart" aria-hidden="true"></i> Charts
+                </h3>
+              </div>
+              <div class="panel-body">
+                <div class="row" style="height:50px;">
+                  <div class="col-md-4">
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#003C71;"></i> BPC <br/>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#b1babf;"></i> Reviews <br/>
+                  </div>
+                  <div class="col-md-4">
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#0071C5;"></i> Commits <br/>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#F3D54E;"></i> BPD <br/>
+                  </div>
+                  <div class="col-md-4">
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#C4D600;"></i> Patch Sets <br/>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#FFA300;"></i> Resolved Bugs <br/>
+                    <i class="fa fa-circle" aria-hidden="true" style="color:#00AEEF;"></i> Filed Bugs
+                  </div>
+                </div>
+                <div class="chart-container", id="chartContainer">
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- ENDS RESULTS CONTAINER -->
+
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="fa fa-list-alt" aria-hidden="true"></i> Details
+                </h3>
+              </div>
+              <div class="panel-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Author</th>
+                      <th>Title</th>
+                      <th>Module</th>
+                      <th>Release</th>
+                      <th>Created / Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-      
     </div>
-  </div> <!-- ENDS RESULTS CONTAINER -->
-  
-  
-
-  
-  {{ data }}
-</div> 
-</div>
   </body>
-
-  
 </html>
