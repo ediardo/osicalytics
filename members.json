@@ -13,31 +13,19 @@
       "project": ["horizon"]
     },
     {
-      "launchpad_id": "david-lyle",
-      "hat": "intel",
-      "dedicated": true,
-      "project": ["horizon"]
-    },
-    {
-      "launchpad_id": "r1chardj0n3s",
-      "hat": "rackspace",
-      "dedicated": true,
-      "project": ["horizon"]
-    },
-    {
       "launchpad_id": "luis-daniel-castellanos",
       "hat": "intel",
       "dedicated": true,
       "project": ["horizon"]
     },
     {
-      "launchpad_id": "electrocucaracha",
+      "launchpad_id": "revon-mathews",
       "hat": "intel",
       "dedicated": true,
-      "project": ["neutron"]
+      "project": ["horizon"]
     },
     {
-      "launchpad_id": "ankur-gupta-f",
+      "launchpad_id": "electrocucaracha",
       "hat": "intel",
       "dedicated": true,
       "project": ["neutron"]
@@ -57,11 +45,13 @@
     {
       "launchpad_id": "yalei-wong",
       "hat": "intel",
+      "dedicated": false,
       "project": ["neutron"]
     },
     {
       "launchpad_id": "yamahata",
       "hat": "intel",
+      "dedicated": false,
       "project": ["neutron"]
     },
     {
@@ -97,7 +87,7 @@
     {
       "launchpad_id": "ganesh-mahalingam",
       "hat": "intel",
-      "dedicated": true,
+      "dedicated": false,
       "project": ["swift"]
     },
     {
@@ -121,7 +111,7 @@
     {
       "launchpad_id": "lianhau-lu",
       "hat": "intel",
-      "dedicated": true,
+      "dedicated": false,
       "project": ["ceilometer"]
     },
     {
@@ -131,16 +121,10 @@
       "project": ["qa"]
     },
     {
-      "launchpad_id": "manjeet-s-bhatia",
-      "hat": "intel",
-      "dedicated": true,
-      "project": ["neutron"]
-    },
-    {
       "launchpad_id": "michael-w-turvey",
       "hat": "intel",
       "dedicated": true,
-      "project": []
+      "project": ["fleet"]
     },
     {
       "launchpad_id": "mohit-motiani",
@@ -151,16 +135,19 @@
     {
       "launchpad_id": "mszankin",
       "hat": "intel",
+      "dedicated": true,
       "project": ["nova"]
     },
     {
       "launchpad_id": "nandini-tata",
       "hat": "intel",
+      "dedicated": true,
       "project": ["swift"]
     },
     {
       "launchpad_id":  "npustchi",
       "hat": "intel",
+      "dedicated": true,
       "project": ["keystone"]
     },
     {
@@ -206,6 +193,7 @@
     {
       "launchpad_id": "sfinucane",
       "hat": "intel",
+      "dedicated": false,
       "project": ["nova"]
     },
     {
@@ -226,31 +214,37 @@
     {
       "launchpad_id": "sumant-murke",
       "hat": "intel",
+      "dedicated": true,
       "project": ["ceilometer"]
     },
     {
       "launchpad_id": "theizaakk",
       "hat": "intel",
+      "dedicated": true,
       "project": ["osa"]
     },
     {
       "launchpad_id": "vinay-potluri",
       "hat": "intel",
+      "dedicated": true,
       "project": ["security"]
     },
     {
       "launchpad_id": "wei-d-chen",
       "hat": "intel",
+      "dedicated": false,
       "project": ["keystone"]
     },
     {
       "launchpad_id": "xek",
       "hat": "intel",
+      "dedicated": false,
       "project": ["keystone"]
     },
     {
       "launchpad_id": "xuhj",
       "hat": "intel",
+      "dedicated": false,
       "project": ["nova"]
     }
   ]
