@@ -5,7 +5,7 @@ app.factory('timeFrames', function() {
       months,
       quarters;
 
-  
+
   return service;
 });
 /*
@@ -28,7 +28,7 @@ app.factory('myFactory', function($http, $q) {
       _utcOffset = -18000,
       _modules = [],
       _osicModules = [];
-  
+
   service.setMembers = function(members) {
     _members = members;
   }
@@ -51,7 +51,7 @@ app.factory('myFactory', function($http, $q) {
     Returns a string with URL pointing to Stackalytics API
   */
   var buildUrl = function(url, params) {
-    return baseUrl + url + '?' + paramsToQuery(params) + '&callback=JSON_CALLBACK';
+    return baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all&callback=JSON_CALLBACK';
   };
 
   /*
@@ -59,7 +59,7 @@ app.factory('myFactory', function($http, $q) {
   */
   var filterData = function(data, byKey) {
     // Get all IDs from our list of users for fitltering
-    memberIds = _members.map(function(member){return member.launchpad_id;})
+    memberIds = _members.map(function(member){ return member.launchpad_id;})
     return data.filter(function(obj, idx) {
       if (memberIds.includes(obj[byKey])) {
         return obj;
@@ -105,10 +105,10 @@ app.factory('myFactory', function($http, $q) {
 
 
   var setMetric = function(metricType,  metric) {
-    _metrics[metricType] = metric; 
+    _metrics[metricType] = metric;
   }
 
-  /* 
+  /*
     Get Metric
   */
   service.getMetric = function(params) {
@@ -120,23 +120,16 @@ app.factory('myFactory', function($http, $q) {
     });
   };
 
-  service.getActivity = function(params) {
-    var url = buildUrl('/activity', params);
-  };
- 
   service.osicModules = function(osicModules){
     _osicModules = osicModules;
   }
-  
-  service.getModules = function(modules){
-    return _modules;
-  }
-  
+
+
   return service;
 });
 
 app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
-  var users = {}, 
+  var users = {},
       metrics = [];
   metrics = [
     {code: 'commits', name: 'Commits'},
@@ -147,28 +140,30 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     {code: 'filed-bugs', name: 'Filed Bugs'},
     {code: 'marks', name: 'Reviews'}
   ];
-  
+
   $http.get('projects.json').then(function(response){
     $scope.osicModules = response.data.projects;
   });
 
+  //
   $http({
-    method: 'GET',
+    method: 'JSONP',
     url:'http://stackalytics.openstack.org/api/1.0/modules'
   }).then(function (response){
     $scope.modules = response.data.data
   })
-  
+
   $http({
-    method: 'GET',
-    url:'http://stackalytics.com/api/1.0/releases'
+    method: 'JSONP',
+    url:'http://stackalytics.com/api/1.0/releases?callback=JSON_CALLBACK'
   }).then(function (response){
+    console.log(response)
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
- 
+
   $scope.dateOptions = {
     maxDate: new Date(),
-    showWeeks: true 
+    showWeeks: true
   };
 
   $scope.dateFormat = 'MM/dd/yyyy';
@@ -222,20 +217,18 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
         $scope.startDate = new Date(year, (quarter - 1) * 3 - 3 , 1);
         $scope.endDate = new Date(year, quarter  * 3 - 3, 0);
         break;
-    }   
+    }
   };
-
 
   $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
     if (newValues[0] != undefined || newValues[1] !== undefined) {
       console.log(newValues);
-      $scope.getNumbers();    
+      $scope.getNumbers();
     }
-    
   });
 
   $scope.hats = [
-    {text: "Intel" , id:"intel"}, 
+    {text: "Intel" , id:"intel"},
     {text: "Rax", id:"rackspace"}
   ]
 
@@ -249,7 +242,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
   $scope.onModuleChange = function(){
     if($scope.selectedModule != null && $scope.selectedModule != undefined){
       $scope.projectMembers = $scope.members.filter(function(member){
-        
+
         if(member.project.includes($scope.selectedModule.name)){
           return member;
         }
@@ -279,11 +272,11 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     $scope.selectedMember = null;
     $('input[name="memberRadio"]').attr('checked', false);
   }
+
   $scope.getNumbers = function() {
     var promises = [];
-    angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled 
+    angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled
     myFactory.setMembers($scope.members);
-    console.log('getNumbers');
 
     angular.forEach(metrics, function(metric) {
       // get metrics for Rackspace
@@ -310,8 +303,8 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
             release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
             module: $scope.selectedModule ? $scope.selectedModule.name : ''
           })
-        );   
-      }    
+        );
+      }
     });
     // All promises have been resolved
     $q.all(promises).then(function (metrics) {
@@ -319,7 +312,9 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
       $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
       charts.sunburst("#chartContainer", $scope.metrics)
     })
-  
+
   }
-  
+  $scope.model = {
+      name: 'Tabs'
+    };
 });

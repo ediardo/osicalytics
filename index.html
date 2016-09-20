@@ -114,7 +114,7 @@
                     <div class="row">
                       <div class="col-md-2">
                         <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onModuleChange()">
-                          <option value="">All Modules</option>
+                          <option value="">All Projects</option>
                         </select>
                       </div>
 
@@ -128,6 +128,15 @@
                           <option value="">All Hats</option>
                         </select>
                       </div>
+
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
+                          <option value="">All Developers</option>
+                        </select>
+                      </div>
+
+
+
                     </div>
                   </div>
                 </div>
@@ -156,86 +165,98 @@
             </div>
           </div>
         </div>
-
-        <div class="row">
-          <div class="col-xs-12 col-md-5 metrics-summary">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-table" aria-hidden="true"></i> Summary</h3>
-              </div>
-              <div class="panel-body">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>Metric</th>
-                      <th>Count</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <th>Commits (actual changes upstream)</th>
-                      <td class="-align-right">{{ metrics.commits.total || 0  }}</td>
-                    </tr>
-                    <tr>
-                      <th>Completed Blueprints</th>
-                      <td class="-align-right">{{ metrics.bpc.total || 0 }}</td>
-                    </tr>
-                    <tr>
-                      <th>Drafted Blueprints</th>
-                      <td class="-align-right">{{ metrics.bpd.total || 0 }}</td>
-                    </tr>
-                    <tr>
-                      <th>Filed bugs</th>
-                      <td class="-align-right">{{ metrics.filed_bugs.total || 0 }}</td>
-                    </tr>
-                    <tr>
-                      <th>Resolved bugs</th>
-                      <td class="-align-right">{{ metrics.resolved_bugs.total || 0 }}</td>
-                    </tr>
-                    <tr>
-                      <th>Reviews</th>
-                      <td class="-align-right">{{ metrics.marks.total || 0 }}</td>
-                    </tr>
-                    <tr>
-                      <th>Patches</th>
-                      <td class="-align-right">{{ metrics.patches.total || 0 }}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xs-12 col-md-7">
-            <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">
-                  <i class="fa fa-pie-chart" aria-hidden="true"></i> Charts
-                </h3>
-              </div>
-              <div class="panel-body">
-                <div class="row" style="height:50px;">
-                  <div class="col-md-4">
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#003C71;"></i> BPC <br/>
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#b1babf;"></i> Reviews <br/>
-                  </div>
-                  <div class="col-md-4">
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#0071C5;"></i> Commits <br/>
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#F3D54E;"></i> BPD <br/>
-                  </div>
-                  <div class="col-md-4">
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#C4D600;"></i> Patch Sets <br/>
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#FFA300;"></i> Resolved Bugs <br/>
-                    <i class="fa fa-circle" aria-hidden="true" style="color:#00AEEF;"></i> Filed Bugs
-                  </div>
+        <uib-tabset active="active">
+          <uib-tab index="0" heading="Summary" classes="bg-tabs">
+            <div class="row" class="tab-content tab-summary">
+              <div class="col-xs-12 col-md-5 metrics-summary">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title"><i class="fa fa-table" aria-hidden="true"></i> Summary</h3>
                 </div>
-                <div class="chart-container", id="chartContainer">
-
+                <div class="panel-body">
+                  <table class="table">
+                    <thead>
+                      <tr>
+                        <th>Metric</th>
+                        <th>Count</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>Commits</th>
+                        <td class="-align-right">{{ metrics.commits.total || 0  }}</td>
+                      </tr>
+                      <tr>
+                        <th>Completed BP</th>
+                        <td class="-align-right">{{ metrics.bpc.total || 0 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Drafted BP</th>
+                        <td class="-align-right">{{ metrics.bpd.total || 0 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Filed bugs</th>
+                        <td class="-align-right">{{ metrics.filed_bugs.total || 0 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Resolved bugs</th>
+                        <td class="-align-right">{{ metrics.resolved_bugs.total || 0 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Reviews</th>
+                        <td class="-align-right">{{ metrics.marks.total || 0 }}</td>
+                      </tr>
+                      <tr>
+                        <th>Patch sets</th>
+                        <td class="-align-right">{{ metrics.patches.total || 0 }}</td>
+                      </tr>
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
+
+            <div class="col-xs-12 col-md-7">
+              <div class="panel panel-default">
+                <div class="panel-heading">
+                  <h3 class="panel-title">
+                    <i class="fa fa-pie-chart" aria-hidden="true"></i> Charts
+                  </h3>
+                </div>
+                <div class="panel-body">
+                  <div class="row" style="height:50px;">
+                    <div class="col-md-4">
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#003C71;"></i> BPC <br/>
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#b1babf;"></i> Reviews <br/>
+                    </div>
+                    <div class="col-md-4">
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#0071C5;"></i> Commits <br/>
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#F3D54E;"></i> BPD <br/>
+                    </div>
+                    <div class="col-md-4">
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#C4D600;"></i> Patch Sets <br/>
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#FFA300;"></i> Resolved Bugs <br/>
+                      <i class="fa fa-circle" aria-hidden="true" style="color:#00AEEF;"></i> Filed Bugs
+                    </div>
+                  </div>
+                  <div class="chart-container", id="chartContainer">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
-        </div> <!-- ENDS RESULTS CONTAINER -->
+        </uib-tab>
+          <uib-tab index="1" heading="Commits">Commits</uib-tab>
+          <uib-tab index="2" heading="Completed BP">Summary</uib-tab>
+          <uib-tab index="3" heading="Drafted BP">Summary</uib-tab>
+          <uib-tab index="4" heading="Filed bugs">Summary</uib-tab>
+          <uib-tab index="5" heading="Resolved bugs">Summary</uib-tab>
+          <uib-tab index="6" heading="Reviews">Summary</uib-tab>
+          <uib-tab index="7" heading="Patch sets">Summary</uib-tab>
+        </uib-tabset>
+
 
         <div class="row">
           <div class="col-xs-12">

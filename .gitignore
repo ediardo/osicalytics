@@ -6,4 +6,5 @@ bower_components/
 [._]s[a-w][a-z]
 #sass cache
 .sass-cache/
-*.map
+assets/css/main.css.map
+*.csv
