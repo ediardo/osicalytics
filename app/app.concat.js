@@ -54,7 +54,7 @@ app.factory('myFactory', function($http, $q) {
     Returns a string with URL pointing to Stackalytics API
   */
   var buildUrl = function(url, params) {
-    return baseUrl + url + '?' + paramsToQuery(params) + '&callback=JSON_CALLBACK';
+    return baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all&callback=JSON_CALLBACK';
   };
 
   /*
@@ -150,16 +150,17 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
 
   //
   $http({
-    method: 'GET',
+    method: 'JSONP',
     url:'http://stackalytics.openstack.org/api/1.0/modules'
   }).then(function (response){
     $scope.modules = response.data.data
   })
 
   $http({
-    method: 'GET',
-    url:'http://stackalytics.com/api/1.0/releases'
+    method: 'JSONP',
+    url:'http://stackalytics.com/api/1.0/releases?callback=JSON_CALLBACK'
   }).then(function (response){
+    console.log(response)
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
 
@@ -316,5 +317,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     })
 
   }
-
+  $scope.model = {
+      name: 'Tabs'
+    };
 });

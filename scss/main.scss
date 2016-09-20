@@ -2,7 +2,7 @@
 @import "base/globals";
 // LAYOUT
 @import "layout/filters";
-
+@import "layout/tabs";
 
 // VENDOR
 @import "vendor/bootstrap-datepicker3.min.css";
@@ -16,7 +16,6 @@ html, body {
   height: 100%;
 }
 body {
-  background: url(../images/OSIC_frame_ghost.png) no-repeat right center #edf2f7;
 }
 
 header {
