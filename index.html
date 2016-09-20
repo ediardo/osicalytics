@@ -129,14 +129,6 @@
                         </select>
                       </div>
 
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
-                          <option value="">All Developers</option>
-                        </select>
-                      </div>
-
-
-
                     </div>
                   </div>
                 </div>
@@ -248,51 +240,61 @@
 
           </div>
         </uib-tab>
-          <uib-tab index="1" heading="Commits">Commits</uib-tab>
-          <uib-tab index="2" heading="Completed BP">Summary</uib-tab>
-          <uib-tab index="3" heading="Drafted BP">Summary</uib-tab>
-          <uib-tab index="4" heading="Filed bugs">Summary</uib-tab>
-          <uib-tab index="5" heading="Resolved bugs">Summary</uib-tab>
-          <uib-tab index="6" heading="Reviews">Summary</uib-tab>
-          <uib-tab index="7" heading="Patch sets">Summary</uib-tab>
+          <uib-tab index="1" heading="Commits">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      <i class="fa fa-list-alt" aria-hidden="true"></i> Details
+                    </h3>
+                  </div>
+                  <div class="panel-body">
+                    <table class="table">
+                      <thead>
+                        <tr>
+                          <th>#</th>
+                          <th>Author</th>
+                          <th>Title</th>
+                          <th>Module</th>
+                          <th>Release</th>
+                          <th>Created / Updated</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                          <td>1</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </uib-tab>
+          <uib-tab index="2" heading="Completed BP">WIP</uib-tab>
+          <uib-tab index="3" heading="Drafted BP">WIP</uib-tab>
+          <uib-tab index="4" heading="Filed bugs">WIP</uib-tab>
+          <uib-tab index="5" heading="Resolved bugs">WIP</uib-tab>
+          <uib-tab index="6" heading="Reviews">WIP</uib-tab>
+          <uib-tab index="7" heading="Patch sets">WIP</uib-tab>
         </uib-tabset>
-
 
         <div class="row">
           <div class="col-xs-12">
             <div class="panel panel-default">
-              <div class="panel-heading">
-                <h3 class="panel-title">
-                  <i class="fa fa-list-alt" aria-hidden="true"></i> Details
-                </h3>
-              </div>
               <div class="panel-body">
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th>#</th>
-                      <th>Author</th>
-                      <th>Title</th>
-                      <th>Module</th>
-                      <th>Release</th>
-                      <th>Created / Updated</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>1</td>
-                      <td>1</td>
-                      <td>1</td>
-                      <td>1</td>
-                      <td>1</td>
-                      <td>1</td>
-                    </tr>
-                  </tbody>
-                </table>
+                Developed by Eddie Ramirez and Daniel Castellanos
               </div>
             </div>
           </div>
         </div>
+
       </div>
     </div>
   </body>
