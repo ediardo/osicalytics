@@ -1,0 +1,11 @@
+{
+  "groups": [
+    {"name": "Compute" },
+    {"name": "Deployment"},
+    {"name": "Metrics/UI"},
+    {"name": "Network/Identity"},
+    {"name": "OSIC"},
+    {"name": "QA/Docs/Security"},
+    {"name": "Storage"}
+  ]
+}
