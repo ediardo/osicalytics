@@ -1,16 +1,16 @@
 {
   "projects": [
-    { "name": "nova", "group": "compute" },
-    { "name": "magnum", "group": "compute" },
-    { "name": "osa", "group": "deployment" },
-    { "name": "ref", "group": "deployment" },
-    { "name": "horizon", "group": "metrics/ui" },
-    { "name": "ceilometer", "group": "metrics/ui" },
-    { "name": "neutron", "group": "network/identity" },
-    { "name": "keystone", "group": "network/identity" },
-    { "name": "qa", "group": "network/identity" },
-    { "name": "security", "group": "security"},
-    { "name": "cinder", "group": "storage"},
-    { "name": "swift", "group": "storage"}
+    { "name": "Nova", "group": "compute" },
+    { "name": "Magnum", "group": "compute" },
+    { "name": "OSA", "group": "deployment" },
+    { "name": "Ref Imp / Ops", "group": "deployment" },
+    { "name": "Horizon", "group": "metrics/ui" },
+    { "name": "Ceilometer", "group": "metrics/ui" },
+    { "name": "Neutron", "group": "network/identity" },
+    { "name": "Keystone", "group": "network/identity" },
+    { "name": "QA", "group": "network/identity" },
+    { "name": "Security", "group": "security"},
+    { "name": "Cinder", "group": "storage"},
+    { "name": "Swift", "group": "storage"}
   ]
 }

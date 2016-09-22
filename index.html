@@ -30,6 +30,13 @@
       <!-- CONTAINER -->
       <div class="container" id="main">
 
+        <div class="alert alert-info alert-dismissible" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <strong>Howdy!</strong> This application still needs more lines of code, so please follow this easy instruction: <strong>First choose a start/end date before using the filters!</strong>.
+          Allow the application to get all data from Stackalytics, if this is taking more than 5 seconds, try refreshing your browser or collaborate to this project ;)
+        </div>
+
+
         <div class="row">
           <div class="col-xs-12">
             <div class="panel panel-default">
@@ -108,13 +115,30 @@
         <div class="row">
           <div class="col-xs-12">
             <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-filter" aria-hidden="true"></i> Filter results</h3>
+              </div>
               <div class="panel-body">
                 <div class="row">
                   <div class="col-xs-12 metrics-filter">
                     <div class="row">
+
                       <div class="col-md-2">
-                        <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onModuleChange()">
-                          <option value="">All Projects</option>
+                        <select class="form-control" ng-options="group.name for group in osicGroups track by group.name" ng-model="selectedGroup" ng-change="onFilterChange()">
+                          <option value="">All Groups</option>
+                        </select>
+                      </div>
+
+
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onFilterChange()">
+                          <option value="">All Teams</option>
+                        </select>
+                      </div>
+
+                      <div class="col-md-2">
+                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onFilterChange()">
+                          <option value="">All Companies</option>
                         </select>
                       </div>
 
@@ -123,40 +147,35 @@
                           <option value="">All Releases</option>
                         </select>
                       </div>
+
                       <div class="col-md-2">
-                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onHatChange()">
-                          <option value="">All Hats</option>
+                        <select class="form-control" ng-options="allocation.text for allocation in allocations track by allocation.dedicated" ng-model="selectedAllocation" ng-change="onFilterChange()">
+                          <option value="">All Allocations</option>
                         </select>
                       </div>
 
                     </div>
                   </div>
                 </div>
+                <button data-toggle="collapse" data-target="#filteredMembers">Show/Hide members</button>
+
+
+                <div class="col-xs-12 metrics-filter collapse" ng-if="filteredMembers.length > 0" id="filteredMembers">
+                  <div class="row">
+                    <div class="col-md-2" ng-repeat="member in filteredMembers">
+                      <label class="radio-inline"><input type="checkbox" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{ member.full_name }}</label>
+                    </div>
+                    <div class="col-md-3">
+                      <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col-xs-12">
-            <div class="panel panel-default" ng-if="projectMembers.length > 0">
-              <div class="panel-body">
-                <div class="row">
-                  <div class="col-xs-12 metrics-filter">
-                    <div class="row">
-                      <div class="col-md-2" ng-repeat="member in projectMembers">
-                        <label class="radio-inline"><input type="radio" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{member.launchpad_id}}</label>
-                      </div>
-                      <div class="col-md-3">
-                        <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
         <uib-tabset active="active">
           <uib-tab index="0" heading="Summary" classes="bg-tabs">
             <div class="row" class="tab-content tab-summary">
@@ -246,7 +265,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading">
                     <h3 class="panel-title">
-                      <i class="fa fa-list-alt" aria-hidden="true"></i> Details
+                      <i class="fa fa-list-alt" aria-hidden="true"></i> Commits details
                     </h3>
                   </div>
                   <div class="panel-body">
@@ -277,19 +296,89 @@
               </div>
             </div>
           </uib-tab>
-          <uib-tab index="2" heading="Completed BP">WIP</uib-tab>
+          <uib-tab index="2" heading="Completed BP">
+            <div class="panel panel-default">
+              <div class="panel-heading">
+                <h3 class="panel-title">
+                  <i class="fa fa-list-alt" aria-hidden="true"></i> Completed BP details
+                </h3>
+              </div>
+              <div class="panel-body">
+                <table class="table">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>Author</th>
+                      <th>Title</th>
+                      <th>Module</th>
+                      <th>Release</th>
+                      <th>Created / Updated</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                      <td>1</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+
+          </uib-tab>
           <uib-tab index="3" heading="Drafted BP">WIP</uib-tab>
           <uib-tab index="4" heading="Filed bugs">WIP</uib-tab>
           <uib-tab index="5" heading="Resolved bugs">WIP</uib-tab>
           <uib-tab index="6" heading="Reviews">WIP</uib-tab>
           <uib-tab index="7" heading="Patch sets">WIP</uib-tab>
+          <uib-tab index="8">
+            <uib-tab-heading>
+              <i class="fa fa-users"></i> Roster
+            </uib-tab-heading>
+
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Group</th>
+                  <th>Project</th>
+                  <th>Company</th>
+                  <th>Allocation</th>
+                  <th>Location</th>
+                  <th>Stackalytics</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="member in members | orderBy:'full_name'">
+                  <td><a href="mailto:{{ member.email }}">{{ member.full_name }}</a></td>
+                  <td>{{ member.group }}</td>
+                  <td>{{ member.project.join(', ') }}</td>
+                  <td>{{ member.hat }}</td>
+                  <td>{{ member.dedicated ? 'Full-time' : 'Part-time' }}</td>
+                  <td>{{ member.location }}</td>
+                  <td><a href="http://stackalytics.com/?user_id={{ member.launchpad_id }}" target="_blank">{{ member.launchpad_id }} <i class="fa fa-external-link" aria-hidden="true"></i>
+</a></td>
+                </tr>
+              </tbody>
+            </table>
+
+
+
+          </uib-tab>
         </uib-tabset>
 
         <div class="row">
           <div class="col-xs-12">
             <div class="panel panel-default">
               <div class="panel-body">
-                Developed by Eddie Ramirez and Daniel Castellanos
+                <p>Developed by <a href="mailto: eddie.ramirez@intel.com">Eddie Ramirez</a> and <a href="mailto: luis.daniel.castellanos@intel.com">Daniel Castellanos</a></p>
+
+                <p><i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/ediardo/osicalytics">Source code in Github</a></p>
               </div>
             </div>
           </div>
