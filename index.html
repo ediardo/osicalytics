@@ -3,6 +3,20 @@
   <head>
     <meta charset="UTF-8">
     <title>OSICAlytics</title>
+    <link rel="apple-touch-icon" sizes="57x57" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/apple-touch-icon-180x180.png">
+    <link rel="icon" type="image/png" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/favicon-32x32.png" sizes="32x32">
+    <link rel="icon" type="image/png" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/android-chrome-192x192.png" sizes="192x192">
+    <link rel="icon" type="image/png" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/favicon-96x96.png" sizes="96x96">
+    <link rel="icon" type="image/png" href="https://osic.org/sites/all/themes/custom/osic_theme/images/favicon/favicon-16x16.png" sizes="16x16">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
     <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
     <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js" crossorigin="anonymous"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js" crossorigin="anonymous"></script>
@@ -12,6 +26,8 @@
     <script src="assets/js/charts/charts.js"></script>
     <script src="app/app.js"></script>
     <link href="assets/css/main.css" rel="stylesheet">
+    <base href="/" />
+
   </head>
 
   <body>
@@ -116,7 +132,7 @@
           <div class="col-xs-12">
             <div class="panel panel-default">
               <div class="panel-heading">
-                <h3 class="panel-title"><i class="fa fa-filter" aria-hidden="true"></i> Filter results</h3>
+                <h3 class="panel-title"><i class="fa fa-filter" aria-hidden="true"></i> Filter results ({{ filteredMembers.length }} out of {{ members.length }} people)</h3>
               </div>
               <div class="panel-body">
                 <div class="row">
@@ -149,7 +165,7 @@
                       </div>
 
                       <div class="col-md-2">
-                        <select class="form-control" ng-options="allocation.text for allocation in allocations track by allocation.dedicated" ng-model="selectedAllocation" ng-change="onFilterChange()">
+                        <select class="form-control" ng-options="allocation.name for allocation in allocations track by allocation.dedicated" ng-model="selectedAllocation" ng-change="onFilterChange()">
                           <option value="">All Allocations</option>
                         </select>
                       </div>
@@ -378,13 +394,19 @@
               <div class="panel-body">
                 <p>Developed by <a href="mailto: eddie.ramirez@intel.com">Eddie Ramirez</a> and <a href="mailto: luis.daniel.castellanos@intel.com">Daniel Castellanos</a></p>
 
-                <p><i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/ediardo/osicalytics">Source code in Github</a></p>
+                <p><i class="fa fa-github" aria-hidden="true"></i> <a href="https://github.com/ediardo/osicalytics">Source code on Github</a></p>
               </div>
             </div>
           </div>
         </div>
 
       </div>
+
+    </div>
+    <div id="overlay" class="">
+
+      <h1>Loading...<img src="assets/images/hourglass.svg">
+</h1>
     </div>
   </body>
 </html>

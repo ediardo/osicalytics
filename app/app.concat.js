@@ -146,31 +146,82 @@ app.factory('myFactory', function($http, $q) {
   return service;
 });
 
-app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
+app.config( [ '$locationProvider', function( $locationProvider ) {
+   $locationProvider.html5Mode( true );
+}]);
+
+app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
   var users = {},
-      metrics = [];
-  metrics = [
-    {code: 'commits', name: 'Commits'},
-    {code: 'bpc', name: 'Completed Blueprints'},
-    {code: 'bpd', name: 'Drafted Blueprints'},
-    {code: 'patches', name:'Patches'},
-    {code: 'resolved-bugs', name: 'Resolved Bugs'},
-    {code: 'filed-bugs', name: 'Filed Bugs'},
-    {code: 'marks', name: 'Reviews'}
+      metrics = [
+        {code: 'commits', name: 'Commits'},
+        {code: 'bpc', name: 'Completed Blueprints'},
+        {code: 'bpd', name: 'Drafted Blueprints'},
+        {code: 'patches', name:'Patches'},
+        {code: 'resolved-bugs', name: 'Resolved Bugs'},
+        {code: 'filed-bugs', name: 'Filed Bugs'},
+        {code: 'marks', name: 'Reviews'}
+      ];
+
+  $scope.hats = [
+    {text: "Intel", id: "Intel"},
+    {text: "Rax", id: "Rackspace"}
   ];
 
+  $scope.allocations = [
+    {name: 'Full-time', dedicated: true},
+    {name: 'Part-time', dedicated: false}
+  ];
 
-  $http.get('groups.json').then(function(response) {
+  var groupsD = $http.get('groups.json').then(function(response) {
     $scope.osicGroups = response.data.groups;
-  })
-  $http.get('projects.json').then(function(response){
+  });
+
+  var projectsD = $http.get('projects.json').then(function(response){
     $scope.osicModules = response.data.projects;
   });
 
-  //
+  var membersD = $http.get('members.json').then(function(response){
+    $scope.members = response.data.members;
+  });
+
+  $q.all([groupsD, projectsD, membersD]).then(function() {
+    var processFilters = false;
+    $scope.startDate = new Date($location.search().start_date * 1000);
+    $scope.endDate = new Date($location.search().end_date * 1000);
+    $scope.selectedGroup = $scope.osicGroups.find(function(group) {
+      if (group.name == $location.search().group) {
+        processFilters = true;
+        return group;
+      }
+    });
+    $scope.selectedModule = $scope.osicModules.find(function(module) {
+      if (module.name == $location.search().team) {
+        processFilters = true;
+        return module;
+      }
+    });
+    $scope.selectedHat = $scope.hats.find(function(hat) {
+      if (hat.id == $location.search().company) {
+        processFilters = true;
+        return hat;
+      }
+    });
+    $scope.selectedAllocation = $scope.allocations.find(function(alloc) {
+      if (alloc.name == $location.search().allocation) {
+        processFilters = true;
+        return alloc;
+      }
+    });
+
+    // If we need to process filter options then...
+    if (processFilters) {
+      $scope.onFilterChange();
+    }
+  })
+
   $http({
     method: 'JSONP',
-    url:'http://stackalytics.openstack.org/api/1.0/modules'
+    url:'http://stackalytics.com/api/1.0/modules?callback=JSON_CALLBACK'
   }).then(function (response){
     $scope.modules = response.data.data
   })
@@ -179,7 +230,6 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     method: 'JSONP',
     url:'http://stackalytics.com/api/1.0/releases?callback=JSON_CALLBACK'
   }).then(function (response){
-    console.log(response)
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
 
@@ -243,30 +293,23 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
   };
 
   $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
-    if (newValues[0] != undefined || newValues[1] !== undefined) {
-      console.log(newValues);
-      $scope.getNumbers();
+    if (newValues[0] !== undefined || newValues[1] !== undefined) {
+      if (!(isNaN(newValues[0]) && isNaN(newValues[1]))) {
+        $location.search('start_date', $scope.startDate.getTime() / 1000);
+        $location.search('end_date', $scope.endDate.getTime() / 1000);
+        $scope.getNumbers();
+      }
     }
   });
 
-  $scope.hats = [
-    {text: "Intel", id: "Intel"},
-    {text: "Rax", id: "Rackspace"}
-  ];
 
-  $scope.allocations = [
-    {text: 'Full-time', dedicated: true},
-    {text: 'Part-time', dedicated: false}
-  ];
 
   // All members in members.json
   $scope.members = [];
   // This variable holds filtered members by the user
   $scope.filteredMembers = [];
 
-  $http.get('members.json').then(function(response){
-    $scope.members = response.data.members;
-  });
+
 
   // TODO(ediardo): REFACTOR THIS ZONE BELOW!!!!
   $scope.onReleaseChange = function(){
@@ -277,48 +320,54 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
     $scope.filteredMembers = $scope.members;
     // Group filters
     if ($scope.selectedGroup != null && $scope.selectedGroup != undefined) {
-      console.log('Group');
-      $scope.filteredMembers = $scope.filteredMembers.filter(function(member){
-        if(member.group.includes($scope.selectedGroup.name)){
+      $location.search('group', $scope.selectedGroup.name)
+      $scope.filteredMembers = $scope.filteredMembers.filter(function(member) {
+        if (member.group.includes($scope.selectedGroup.name)) {
           return member;
         }
       });
+    } else {
+      $location.search('group', '');
     }
-
     // Team filters
     if ($scope.selectedModule != null && $scope.selectedModule != undefined) {
-      console.log('Mod');
-      $scope.filteredMembers = $scope.filteredMembers.filter(function(member){
-        if(member.project.includes($scope.selectedModule.name)){
+      $location.search('team', $scope.selectedModule.name);
+      $scope.filteredMembers = $scope.filteredMembers.filter(function(member) {
+        if (member.project.includes($scope.selectedModule.name)){
           return member;
         }
       });
+    } else {
+      $location.search('team', '');
     }
 
     // Company filter
     if ($scope.selectedHat != null && $scope.selectedHat != undefined) {
-      $scope.filteredMembers = $scope.members.filter(function(member){
+      $location.search('company', $scope.selectedHat.id);
+      $scope.filteredMembers = $scope.filteredMembers.filter(function(member){
         if (member.hat.includes($scope.selectedHat.id)) {
           return member;
         }
       });
+    } else {
+      $location.search('company', '');
     }
 
     // Allocations filter
     if ($scope.selectedAllocation != null && $scope.selectedAllocation != undefined) {
-      $scope.filteredMembers = $scope.members.filter(function(member){
+      $location.search('allocation', $scope.selectedAllocation.name);
+      $scope.filteredMembers = $scope.filteredMembers.filter(function(member){
         if (member.dedicated == $scope.selectedAllocation.dedicated) {
           return member;
         }
       });
+    } else {
+      $location.search('allocation', '');
     }
-
-    console.log($scope.filteredMembers);
     $scope.getNumbers();
   }
 
   $scope.onSelectedMember = function (caller) {
-    console.log(caller.selectedMember);
     $scope.selectedMember = caller.selectedMember;
   }
 
@@ -328,49 +377,50 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q) {
   }
 
   $scope.getNumbers = function() {
-    var promises = [];
-    angular.element(document.querySelectorAll('.time-frames-group button')).addClass('disabled'); // Adds .disabled
-    if ($scope.filteredMembers.length == 0) {
-      console.log('all')
-      myFactory.setMembers($scope.members);
-    } else {
-      console.log('some');
-      myFactory.setMembers($scope.filteredMembers);
-    }
-
-
-    angular.forEach(metrics, function(metric) {
-      // get metrics for Rackspace
-      if($scope.selectedHat == undefined || $scope.selectedHat.id == 'Rackspace' ){
-        promises.push(
-          myFactory.getMetric({
-            start_date: $scope.startDate.getTime() / 1000 - 1800,
-            end_date: $scope.endDate.getTime() / 1000 - 1800,
-            metric: metric.code,
-            company: 'rackspace',
-            release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all'
-          })
-        );
+    $q.all([membersD]).then(function() {
+      var promises = [];
+      angular.element(document.querySelectorAll('#overlay')).addClass('-show-overlay'); // Adds .disabled
+      if ($scope.filteredMembers.length == 0) {
+        console.log('All members');
+        myFactory.setMembers($scope.members);
+      } else {
+        console.log('Some members');
+        myFactory.setMembers($scope.filteredMembers);
       }
-      // get metrics for Intel
-      if($scope.selectedHat == undefined || $scope.selectedHat.id == 'Intel' ){
-        promises.push(
-          myFactory.getMetric({
-            start_date: $scope.startDate.getTime() / 1000 - 1800,
-            end_date: $scope.endDate.getTime() / 1000 - 1800,
-            metric: metric.code,
-            company: 'intel',
-            release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all'
-          })
-        );
-      }
+
+      angular.forEach(metrics, function(metric) {
+        // get metrics for Rackspace
+        if($scope.selectedHat == undefined || $scope.selectedHat.id == 'Rackspace' ){
+          promises.push(
+            myFactory.getMetric({
+              start_date: $scope.startDate.getTime() / 1000,
+              end_date: $scope.endDate.getTime() / 1000,
+              metric: metric.code,
+              company: 'rackspace',
+              release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all'
+            })
+          );
+        }
+        // get metrics for Intel
+        if($scope.selectedHat == undefined || $scope.selectedHat.id == 'Intel' ){
+          promises.push(
+            myFactory.getMetric({
+              start_date: $scope.startDate.getTime() / 1000,
+              end_date: $scope.endDate.getTime() / 1000,
+              metric: metric.code,
+              company: 'intel',
+              release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all'
+            })
+          );
+        }
+      });
+      // All promises have been resolved
+      $q.all(promises).then(function (metrics) {
+        angular.element(document.querySelectorAll('#overlay')).removeClass('-show-overlay');
+        $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
+        console.log($scope.metrics);
+        charts.sunburst("#chartContainer", $scope.metrics)
+      });
     });
-    // All promises have been resolved
-    $q.all(promises).then(function (metrics) {
-      angular.element(document.querySelectorAll('.time-frames-group button')).removeClass('disabled');
-      $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
-      charts.sunburst("#chartContainer", $scope.metrics)
-    })
-
   }
 });
