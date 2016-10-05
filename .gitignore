@@ -8,3 +8,4 @@ bower_components/
 .sass-cache/
 assets/css/main.css.map
 *.csv
+*.pyc
