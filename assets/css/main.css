@@ -20,13 +20,12 @@ body {
   position: fixed;
   right: 0;
   top: 0;
-  transition: opacity 1s;
-  -webkit-transition: opacity 1s;
 }
 #overlay.-show-overlay {
   display: flex;
   opacity: 1;
   z-index: 1001;
+  transition: opacity 1s;
 }
 
 .-align-right {

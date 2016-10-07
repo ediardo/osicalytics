@@ -1,7 +1,7 @@
  
 
 
-var app = angular.module("osicApp", ['ui.bootstrap']);
+var app = angular.module("osicApp", ['ui.bootstrap', 'ngTable']);
 app.factory('timeFrames', function() {
   var service = {},
       weeks,
@@ -124,6 +124,24 @@ app.factory('myFactory', function($http, $q) {
     });
   };
 
+  /*
+    Get Details
+  */
+  service.getDetails = function(params) {
+    params.user_id = _members.filter(function(member) {
+      if (! (member.project.includes('Mgmt') || member.group.includes('OSIC'))) {
+        return true;
+      } else {
+        return false;
+      }
+    }).map(function(member) { return member.launchpad_id; }).join(',');
+    console.log(params.user_id.split(',').length);
+    var url = buildUrl('/activity', params);
+    console.log(url);
+    return $http.jsonp(url).then(function(response) {
+      return response.data;
+    });
+  }
   service.getOsicProjects = function(params) {
     var url = '/projects.json';
     return $http.get(url).then(function(response) {
@@ -146,11 +164,26 @@ app.factory('myFactory', function($http, $q) {
   return service;
 });
 
-app.config( [ '$locationProvider', function( $locationProvider ) {
-   $locationProvider.html5Mode( true );
+app.config( [ '$locationProvider', '$logProvider', function( $locationProvider,$logProvider ) {
+   $locationProvider.html5Mode(true);
+   $logProvider.debugEnabled(true)
 }]);
 
-app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
+app.directive('loading', function() {
+  return {
+    link: function(scope, element, attrs) {
+      scope.$watch('loading', function (val) {
+        if (val) {
+          element.addClass('-show-overlay');
+        } else {
+          element.removeClass('-show-overlay');
+        }
+      });
+    }
+  }
+});
+
+app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location, NgTableParams) {
   var users = {},
       metrics = [
         {code: 'commits', name: 'Commits'},
@@ -297,6 +330,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
       if (!(isNaN(newValues[0]) && isNaN(newValues[1]))) {
         $location.search('start_date', $scope.startDate.getTime() / 1000);
         $location.search('end_date', $scope.endDate.getTime() / 1000);
+        $scope.active = 0;
         $scope.getNumbers();
       }
     }
@@ -364,6 +398,7 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
     } else {
       $location.search('allocation', '');
     }
+    $scope.active = 0;
     $scope.getNumbers();
   }
 
@@ -379,7 +414,9 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
   $scope.getNumbers = function() {
     $q.all([membersD]).then(function() {
       var promises = [];
-      angular.element(document.querySelectorAll('#overlay')).addClass('-show-overlay'); // Adds .disabled
+      $scope.loading = true;
+      //angular.element(document.querySelectorAll('#overlay')).addClass('-show-overlay'); // Adds .disabled
+
       if ($scope.filteredMembers.length == 0) {
         console.log('All members');
         myFactory.setMembers($scope.members);
@@ -416,11 +453,46 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location) {
       });
       // All promises have been resolved
       $q.all(promises).then(function (metrics) {
-        angular.element(document.querySelectorAll('#overlay')).removeClass('-show-overlay');
+
         $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
         console.log($scope.metrics);
+        //angular.element(document.querySelectorAll('#overlay')).removeClass('-show-overlay');
+        $scope.loading = false;
         charts.sunburst("#chartContainer", $scope.metrics)
       });
     });
-  }
+  };
+
+  $scope.getDetails = function(metric) {
+    var promises = [],
+        ngTableInitials = {
+          count: 0
+        };
+    $scope.loading = true;
+    myFactory.getDetails({
+      start_date: $scope.startDate.getTime() / 1000,
+      end_date: $scope.endDate.getTime() / 1000,
+      metric: metric,
+      release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
+      page_size: 0
+    }).then(function (details) {
+      console.log(details);
+      if (metric == 'commits') {
+        $scope.commits = new NgTableParams({}, { dataset: details.activity });
+      } else if (metric == 'bpc') {
+        $scope.bpc = new NgTableParams({}, { dataset: details.activity });
+      } else if (metric == 'bpd') {
+        $scope.bpd = new NgTableParams({}, { dataset: details.activity });
+      } else if (metric == 'resolved-bugs') {
+        $scope.resolvedBugs = new NgTableParams({}, { dataset: details.activity });
+      } else if (metric == 'filed-bugs') {
+        $scope.filedBugs = new NgTableParams({}, { dataset: details.activity });
+      } else if (metric == 'marks') {
+        $scope.marks = new NgTableParams({}, { dataset: details.activity });
+      }
+      $scope.loading = false;
+    });
+
+  };
+
 });
