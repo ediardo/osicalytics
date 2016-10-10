@@ -20,11 +20,11 @@ body {
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 1001;
 }
 #overlay.-show-overlay {
   display: flex;
-  opacity: 1;
-  z-index: 1001;
+  opacity: 1.0;
   transition: opacity 1s;
 }
 

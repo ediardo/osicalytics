@@ -149,9 +149,9 @@ app.factory('myFactory', function($http, $q) {
     })
   };
 
-  service.getOsicGroups = function(params) {
+  service.getOsicGroups = function (params) {
     var url = '/groups.json';
-    return $http.get(url).then(function(response) {
+    return $http.get(url).then(function (response) {
       return response.data.groups;
     })
   };
@@ -164,7 +164,7 @@ app.factory('myFactory', function($http, $q) {
   return service;
 });
 
-app.config( [ '$locationProvider', '$logProvider', function( $locationProvider,$logProvider ) {
+app.config(['$locationProvider', '$logProvider', function ($locationProvider,$logProvider) {
    $locationProvider.html5Mode(true);
    $logProvider.debugEnabled(true)
 }]);
@@ -183,7 +183,20 @@ app.directive('loading', function() {
   }
 });
 
-app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location, NgTableParams) {
+app.directive('filters', function () {
+  return {
+    link: function(scope, element, attrs) {
+      scope.$watch('filters', function (val) {
+        if (val) {
+          element.removeAttr('disabled');
+        } else {
+          element.attr('disabled', 'true');
+        }
+      });
+    }
+  }
+})
+app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, NgTableParams) {
   var users = {},
       metrics = [
         {code: 'commits', name: 'Commits'},
@@ -326,13 +339,14 @@ app.controller('scoreCtrl', function($scope, $http, myFactory, $q, $location, Ng
   };
 
   $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
-    if (newValues[0] !== undefined || newValues[1] !== undefined) {
-      if (!(isNaN(newValues[0]) && isNaN(newValues[1]))) {
+    if ((newValues[0] !== undefined || newValues[1] !== undefined) && !(isNaN(newValues[0]) && isNaN(newValues[1]))) {
         $location.search('start_date', $scope.startDate.getTime() / 1000);
         $location.search('end_date', $scope.endDate.getTime() / 1000);
         $scope.active = 0;
         $scope.getNumbers();
-      }
+        $scope.filters = true;
+    } else {
+      $scope.filters = false;
     }
   });
 

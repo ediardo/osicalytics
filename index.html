@@ -140,38 +140,38 @@
                 <div class="row">
                   <div class="col-xs-12 metrics-filter">
                     <div class="row">
+                      <fieldset filters>
+                        <div class="col-md-2">
+                          <select class="form-control" ng-options="group.name for group in osicGroups track by group.name" ng-model="selectedGroup" ng-change="onFilterChange()">
+                            <option value="">All Groups</option>
+                          </select>
+                        </div>
 
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="group.name for group in osicGroups track by group.name" ng-model="selectedGroup" ng-change="onFilterChange()">
-                          <option value="">All Groups</option>
-                        </select>
-                      </div>
 
+                        <div class="col-md-2">
+                          <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onFilterChange()">
+                            <option value="">All Teams</option>
+                          </select>
+                        </div>
 
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="module.name for module in osicModules track by module.name" ng-model="selectedModule" ng-change="onFilterChange()">
-                          <option value="">All Teams</option>
-                        </select>
-                      </div>
+                        <div class="col-md-2">
+                          <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onFilterChange()">
+                            <option value="">All Companies</option>
+                          </select>
+                        </div>
 
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="hat.text for hat in hats track by hat.id" ng-model="selectedHat" ng-change="onFilterChange()">
-                          <option value="">All Companies</option>
-                        </select>
-                      </div>
+                        <div class="col-md-2">
+                          <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease" ng-change="onReleaseChange()">
+                            <option value="">All Releases</option>
+                          </select>
+                        </div>
 
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="release.text for release in releases track by release.id" ng-model="selectedRelease" ng-change="onReleaseChange()">
-                          <option value="">All Releases</option>
-                        </select>
-                      </div>
-
-                      <div class="col-md-2">
-                        <select class="form-control" ng-options="allocation.name for allocation in allocations track by allocation.dedicated" ng-model="selectedAllocation" ng-change="onFilterChange()">
-                          <option value="">All Allocations</option>
-                        </select>
-                      </div>
-
+                        <div class="col-md-2">
+                          <select class="form-control" ng-options="allocation.name for allocation in allocations track by allocation.dedicated" ng-model="selectedAllocation" ng-change="onFilterChange()">
+                            <option value="">All Allocations</option>
+                          </select>
+                        </div>
+                      </fieldset>
                     </div>
                   </div>
                 </div>
