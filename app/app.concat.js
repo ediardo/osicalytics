@@ -206,17 +206,24 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
         {code: 'resolved-bugs', name: 'Resolved Bugs'},
         {code: 'filed-bugs', name: 'Filed Bugs'},
         {code: 'marks', name: 'Reviews'}
+      ],
+      hats = [
+        {text: "Intel", id: "Intel"},
+        {text: "Rax", id: "Rackspace"}
+      ],
+      allocations = [
+        {name: 'Full-time', dedicated: true},
+        {name: 'Part-time', dedicated: false}
       ];
 
-  $scope.hats = [
-    {text: "Intel", id: "Intel"},
-    {text: "Rax", id: "Rackspace"}
-  ];
 
-  $scope.allocations = [
-    {name: 'Full-time', dedicated: true},
-    {name: 'Part-time', dedicated: false}
-  ];
+  $scope.init = function (){
+    $scope.setTimeFrame('currentWeek');
+    $scope.allocations = allocations;
+    $scope.hats = hats;
+  }
+
+  
 
   var groupsD = $http.get('groups.json').then(function(response) {
     $scope.osicGroups = response.data.groups;
@@ -339,7 +346,7 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
   };
 
   $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
-    if ((newValues[0] !== undefined || newValues[1] !== undefined) && !(isNaN(newValues[0]) && isNaN(newValues[1]))) {
+    if ((newValues[0] !== undefined || newValues[1] !== undefined) && !(isNaN(newValues[0]) || isNaN(newValues[1]))) {
         $location.search('start_date', $scope.startDate.getTime() / 1000);
         $location.search('end_date', $scope.endDate.getTime() / 1000);
         $scope.active = 0;
