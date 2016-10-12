@@ -8,19 +8,21 @@
 * License
 
 ## Introduction
-
+OSICAlytics is a web-based tool that summarizes OSIC contributions to OpenStack. It also displays detailed information about several metrics like commits, blueprints, bugs and reviews. It also provides links to individual contributions (Gerrit, Stackalytics, Launchpad)
 
 ## Prerequisities
 Install npm and bower.
 
 ## Installing
 Install npm dependencies
+
 `
 $ cd osicalytics
 $ npm install
 `
 
 Install bower dependencies
+
 `$ bower install`
 
 
@@ -30,6 +32,7 @@ Download the latest CSV version of the OSIC Roster and use the roster_parter.py 
 
 ## Deployment
 ### Development
+
 `
 $ cd osicalytics
 $ grunt`
