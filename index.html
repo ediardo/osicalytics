@@ -181,10 +181,7 @@
                 <div class="col-xs-12 metrics-filter collapse" ng-if="filteredMembers.length > 0" id="filteredMembers">
                   <div class="row">
                     <div class="col-md-2" ng-repeat="member in filteredMembers">
-                      <label class="radio-inline"><input type="checkbox" name="memberRadio" value="{{member.launchpad_id}}" ng-model="selectedMember" ng-change="onSelectedMember(this)" />{{ member.full_name }}</label>
-                    </div>
-                    <div class="col-md-3">
-                      <button class="btn btn-sm btn-primary" ng-click="clearSelectedMember()">Clear</button>
+                      {{ member.full_name }}
                     </div>
                   </div>
                 </div>
