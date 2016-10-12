@@ -115,7 +115,7 @@ app.factory('myFactory', function($http, $q) {
   /*
     Get Metric
   */
-  service.getMetric = function(params) {
+  service.getMetric = function(params) { 
     var url = buildUrl('/stats/engineers', params);
     console.log(url);
     return $http.jsonp(url).then(function(response) {
@@ -218,12 +218,17 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
 
 
   $scope.init = function (){
-    $scope.setTimeFrame('currentWeek');
     $scope.allocations = allocations;
     $scope.hats = hats;
+    $scope.popupStartDate = {opened: false};
+    $scope.popupEndDate = {opened: false};
+    $scope.dateOptions = {maxDate: new Date(), showWeeks: true};
+    $scope.dateFormat = 'MM/dd/yyyy';
+    // All members in members.json
+    $scope.members = [];
+    // This variable holds filtered members by the user
+    $scope.filteredMembers = [];
   }
-
-  
 
   var groupsD = $http.get('groups.json').then(function(response) {
     $scope.osicGroups = response.data.groups;
@@ -239,8 +244,14 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
 
   $q.all([groupsD, projectsD, membersD]).then(function() {
     var processFilters = false;
-    $scope.startDate = new Date($location.search().start_date * 1000);
-    $scope.endDate = new Date($location.search().end_date * 1000);
+    startDate = new Date($location.search().start_date * 1000);
+    endDate = new Date($location.search().end_date * 1000);
+    if(isNaN(startDate) && isNaN(endDate))
+      $scope.setTimeFrame('currentWeek')
+    else{
+      $scope.startDate = startDate;
+      $scope.endDate = endDate;
+    }
     $scope.selectedGroup = $scope.osicGroups.find(function(group) {
       if (group.name == $location.search().group) {
         processFilters = true;
@@ -286,27 +297,12 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
     $scope.releases = response.data.data.splice(1, response.data.data.length)
   })
 
-  $scope.dateOptions = {
-    maxDate: new Date(),
-    showWeeks: true
-  };
-
-  $scope.dateFormat = 'MM/dd/yyyy';
-
   $scope.openStartDate = function() {
     $scope.popupStartDate.opened = true;
   };
 
   $scope.openEndDate= function() {
     $scope.popupEndDate.opened = true;
-  };
-
-  $scope.popupStartDate = {
-    opened: false
-  };
-
-  $scope.popupEndDate = {
-    opened: false
   };
 
   // This function sets start/end time frames
@@ -356,15 +352,6 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
       $scope.filters = false;
     }
   });
-
-
-
-  // All members in members.json
-  $scope.members = [];
-  // This variable holds filtered members by the user
-  $scope.filteredMembers = [];
-
-
 
   // TODO(ediardo): REFACTOR THIS ZONE BELOW!!!!
   $scope.onReleaseChange = function(){
