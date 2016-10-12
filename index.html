@@ -34,7 +34,7 @@
 
   <body>
     <div id="tooltip"></div>
-    <div ng-app="osicApp" ng-controller="scoreCtrl as ctrl">
+    <div ng-app="osicApp" ng-controller="scoreCtrl as ctrl" ng-init="init()">
       <!-- HEADER -->
       <header>
         <nav class="navbar navbar-default navbar-static-top navbar-inverse">
@@ -101,7 +101,7 @@
                           <div class="col-xs-12 col-sm-6">
                             <div class="input-group">
                               <div class="input-group-addon">from</div>
-                              <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-dates >
+                              <input type="text" class="form-control" id="range.start" placeholder="mm/dd/yyyy" ng-model="startDate" is-open="popupStartDate.opened" datepicker-options="dateOptions" ng-required="true" uib-datepicker-popup="{{ dateFormat }}" ng-pattern="/^[0,1]?\d{1}\/(([0-2]?\d{1})|([3][0,1]{1}))\/(([1]{1}[9]{1}[9]{1}\d{1})|([2-9]{1}\d{3}))$/" time-frame-date>
                               <span class="input-group-btn">
                                 <button type="button" class="btn btn-default" ng-click="openStartDate()">
                                   <i class="fa fa-calendar-plus-o" aria-hidden="true"></i>
