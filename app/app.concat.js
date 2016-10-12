@@ -248,7 +248,7 @@ app.controller('scoreCtrl', function ($scope, $http, myFactory, $q, $location, N
     endDate = new Date($location.search().end_date * 1000);
     if(isNaN(startDate) && isNaN(endDate))
       $scope.setTimeFrame('currentWeek')
-    else{
+    } else {
       $scope.startDate = startDate;
       $scope.endDate = endDate;
     }
