@@ -126,7 +126,7 @@ app.factory('myFactory', function($http, $q) {
   */
   service.getDetails = function(params) {
     params.user_id = _members.filter(function(member) {
-      if (! (member.project.includes('Mgmt') || member.group.includes('OSIC'))) {
+      if (member.valid_id && !(member.project.includes('Mgmt') || member.group.includes('OSIC'))) {
         return true;
       } else {
         return false;
