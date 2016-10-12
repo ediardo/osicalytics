@@ -45,6 +45,7 @@ Just set the docroot as the project directory
 Awesome contributors that make this happen are:
 * Eddie Ramirez <eddie.ramirez@intel.com>
 * Daniel Castellanos <luis.daniel.castellanos@intel.com>
+* Juan Pablo Lopez <juan.pablo.lopez.gutierrez@intel.com>
 
 ## Contributing
 Find a bug? Request a new feature? Submit an issue or PR
