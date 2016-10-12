@@ -9,3 +9,5 @@ bower_components/
 assets/css/main.css.map
 *.csv
 *.pyc
+.DS_STORE
+*.swp
