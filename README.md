@@ -28,6 +28,7 @@ Install bower dependencies
 
 ### Updating the roster (members.json)
 Download the latest CSV version of the OSIC Roster and use the roster_parter.py script to generate a JSON object
+
 `$ tools/roster_parser.py > members.json`
 
 ## Deployment
