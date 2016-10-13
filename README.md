@@ -18,6 +18,7 @@ Install npm dependencies
 
 `
 $ cd osicalytics
+
 $ npm install
 `
 
@@ -36,6 +37,7 @@ Download the latest CSV version of the OSIC Roster and use the roster_parter.py 
 
 `
 $ cd osicalytics
+
 $ grunt`
 
 ### Production
@@ -48,7 +50,7 @@ Awesome contributors that make this happen are:
 * Juan Pablo Lopez <juan.pablo.lopez.gutierrez@intel.com>
 
 ## Contributing
-Find a bug? Request a new feature? Submit an issue or PR
+Found a bug? Request a new feature? Submit an issue or PR
 
 ## License
 This project is licensed under the Apache 2.0 License - see the LICENSE.md file for details
