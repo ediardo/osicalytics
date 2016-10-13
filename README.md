@@ -18,7 +18,6 @@ Install npm dependencies
 
 ```
 $ cd osicalytics
-
 $ npm install
 ```
 
@@ -38,7 +37,8 @@ Download the latest CSV version of the OSIC Roster and use the roster_parter.py 
 ```
 $ cd osicalytics
 
-$ grunt```
+$ grunt
+```
 
 ### Production
 Just set the docroot as the project directory
