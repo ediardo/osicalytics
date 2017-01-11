@@ -2,6 +2,7 @@
   "projects": [
     { "name": "Nova", "group": "compute" },
     { "name": "Magnum", "group": "compute" },
+    { "name": "Glance", "group": "compute" },
     { "name": "OSA", "group": "deployment" },
     { "name": "Ref Imp / Ops", "group": "deployment" },
     { "name": "Horizon", "group": "metrics/ui" },

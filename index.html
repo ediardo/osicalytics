@@ -461,14 +461,18 @@
               </thead>
               <tbody>
                 <tr ng-repeat="member in members | orderBy:'full_name'">
-                  <td><a href="mailto:{{ member.email }}">{{ member.full_name }}</a></td>
+                  <td><a href="mailto:{{ member.email }}">{{ member.first_name.concat(' ', member.last_name) }}</a></td>
                   <td>{{ member.group }}</td>
                   <td>{{ member.project.join(', ') }}</td>
                   <td>{{ member.hat }}</td>
                   <td>{{ member.dedicated ? 'Full-time' : 'Part-time' }}</td>
                   <td>{{ member.location }}</td>
-                  <td><a href="http://stackalytics.com/?user_id={{ member.launchpad_id }}" target="_blank">{{ member.launchpad_id }} <i class="fa fa-external-link" aria-hidden="true"></i>
-</a></td>
+                  <td>
+                    <span ng-show="member.valid_id">
+                      <a href="http://stackalytics.com/?user_id={{ member.launchpad_id }}" target="_blank">{{ member.launchpad_id }} <i class="fa fa-external-link" aria-hidden="true"></i>
+</a>
+                    </span>
+                  </td>
                 </tr>
               </tbody>
             </table>

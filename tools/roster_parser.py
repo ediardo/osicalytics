@@ -22,27 +22,27 @@ with open(args.roster, 'rb') as roster:
     next(members)
     members_json =[] 
     for member in members:
-        if member[13]:
+        if member[14]:
             r = requests.get('http://stackalytics.com/api/1.0/activity?user_id=' + 
-                             member[13])
+                             member[14])
             valid_id = True if r.status_code == 200 else False
         else:
             valid_id = False
-        dedicated = True if member[7] == 'OSIC' else False
+        dedicated = True if member[8] == 'OSIC' else False
         members_json.append({
           'first_name': member[0],
           'last_name': member[1],
-          'full_name': member[14],
-          'email': member[8],
-          'location': member[9],
-          'launchpad_id': member[13],
+          'full_name': member[15],
+          'email': member[9],
+          'location': member[10],
+          'launchpad_id': member[14],
           'dedicated': dedicated,
-          'hat': member[6],
-          'group': member[5],
-          'position': member[4],
+          'hat': member[7],
+          'group': member[6],
+          'position': member[5],
           'irc_handle': member[2],
           'valid_id': valid_id,
-          'project': [member[3]]})
+          'project': [member[4]]})
 
     if args.validate:
         for member in members_json:
