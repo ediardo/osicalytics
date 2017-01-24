@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         options: {
           style: 'expanded'
         },
-        files: { 
+        files: {
           'assets/css/main.css': 'scss/main.scss'
         }
       }
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
     connect: {
       server: {
         options: {
-          port: 9000,
+          port: 8000,
           hostname: "localhost",
           open: true
         }
@@ -22,11 +22,15 @@ module.exports = function(grunt) {
     watch: {
       css: {
         files: [
-                '**/*.scss',
-                'app/app.js',
-                'app/directives/*.js',
-                'app/services/*.js'
-               ],
+          'scss/base/*.scss',
+          'scss/layout/*.scss',
+          'scss/module/*.scss',
+          'scss/main.scss',
+          'app/app.module.js',
+          'app/directives/*.js',
+          'app/services/*.js',
+          'app/controllers/*.js'
+        ],
         tasks: ['sass', 'concat']
       }
     },
@@ -36,9 +40,10 @@ module.exports = function(grunt) {
       },
       dist: {
         src: [
-              'app/directives/*.js',
-              'app/services/*.js',
-              'app/app.js'
+          'app/app.module.js',
+          'app/controllers/*.controller.js',
+          'app/services/*.service.js',
+          'app/directives/*.directive.js'
         ],
         dest: 'app/app.concat.js'
       }

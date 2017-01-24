@@ -1,0 +1,52 @@
+#liveTab {
+
+  #liveFeed {
+    font-size: 19px;
+
+    .icon-type {
+      font-size: 1.5em;
+      font-weight: bold;
+    }
+
+    .review-value {
+      font-size: 1.1em;
+    }
+
+    .object-title {
+      font-size: 1.2em;
+    }
+
+    .object-action {
+      font-weight: bold;
+      font-size: 1.2em;
+    }
+
+    .object-author {
+      font-size: 1.3em;
+
+      &.intel-color {
+        color: $intel-color;
+      }
+      &.rax-color {
+        color: $rax-color;
+      }
+    }
+
+  }
+  .panel-heading {
+    h2 {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+  }
+
+  .panel-body {
+    font-size: 18px;
+
+
+
+
+
+  }
+
+}

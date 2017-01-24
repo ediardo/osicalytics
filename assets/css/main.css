@@ -49,6 +49,40 @@ body {
   margin-top: 15px;
 }
 
+#liveTab #liveFeed {
+  font-size: 19px;
+}
+#liveTab #liveFeed .icon-type {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+#liveTab #liveFeed .review-value {
+  font-size: 1.1em;
+}
+#liveTab #liveFeed .object-title {
+  font-size: 1.2em;
+}
+#liveTab #liveFeed .object-action {
+  font-weight: bold;
+  font-size: 1.2em;
+}
+#liveTab #liveFeed .object-author {
+  font-size: 1.3em;
+}
+#liveTab #liveFeed .object-author.intel-color {
+  color: blue;
+}
+#liveTab #liveFeed .object-author.rax-color {
+  color: red;
+}
+#liveTab .panel-heading h2 {
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+#liveTab .panel-body {
+  font-size: 18px;
+}
+
 /*!
  *  Font Awesome 4.6.2 by @davegandy - http://fontawesome.io - @fontawesome
  *  License - http://fontawesome.io/license (Font: SIL OFL 1.1, CSS: MIT License)
