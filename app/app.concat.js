@@ -318,7 +318,6 @@
           release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
           page_size: 0
         }).then(function (details) {
-          console.log(details);
           if (metric == 'commits') {
             $scope.commits = new NgTableParams({}, { dataset: details.activity });
           } else if (metric == 'bpc') {
@@ -344,7 +343,6 @@
 
           $scope.loading = true;
           angular.forEach(liveMetrics, function(metric) {
-            console.log('getting  ' + metric);
             promises.push(
               myFactory.getDetails({
                 start_date: $scope.startDate.getTime() / 1000,
@@ -366,9 +364,7 @@
             liveFeedObjs = liveFeedObjs.reduce(function(a, b) {
               return a.concat(b);
             })
-            console.log('COmpleted All');
             $scope.liveFeed = liveFeedObjs;
-            console.log($scope.liveFeed);
           });
       };
 
@@ -443,7 +439,11 @@
         Returns a string with URL pointing to Stackalytics API
       */
       var buildUrl = function(url, params) {
-        return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
+        if (_isTunnelingEnabled) {
+          return _baseUrl + url + encodeURIComponent('?' + paramsToQuery(params) + '&project_type=all');
+        } else {
+          return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
+        }
       };
 
       /*

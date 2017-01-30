@@ -65,7 +65,11 @@
         Returns a string with URL pointing to Stackalytics API
       */
       var buildUrl = function(url, params) {
-        return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
+        if (_isTunnelingEnabled) {
+          return _baseUrl + url + encodeURIComponent('?' + paramsToQuery(params) + '&project_type=all');
+        } else {
+          return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
+        }
       };
 
       /*
