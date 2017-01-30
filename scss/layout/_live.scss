@@ -1,0 +1,60 @@
+#liveTab {
+
+  h1 {
+    margin-top: 0;
+  }
+  #liveFeed {
+
+    font-size: 18px;
+
+    .icon-type {
+      font-size: 1.5em;
+      font-weight: bold;
+      margin-right: 15px;
+    }
+
+    .review-value {
+      font-size: 1.1em;
+    }
+
+    .object-title {
+      font-size: 1.15em;
+
+      a {
+        text-decoration: none;
+        color: #FFF;
+      }
+    }
+
+    .object-action {
+      font-weight: bold;
+      font-size: 1.15em;
+    }
+
+    .object-project {
+      font-size: 1.15em;
+    }
+    .object-author {
+      font-size: 1.25em;
+
+      &.intel-color {
+        color: $intel-color;
+      }
+      &.rax-color {
+        color: $rax-color;
+      }
+    }
+
+  }
+  .panel-heading {
+    h2 {
+      margin-top: 0px;
+      margin-bottom: 0px;
+    }
+  }
+
+  .panel-body {
+    font-size: 18px;
+  }
+
+}
