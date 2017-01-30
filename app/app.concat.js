@@ -2,102 +2,20 @@
   'use strict';
 
   angular
-    .module('osicApp', ['ui.bootstrap', 'ngTable'])
-    .config(['$locationProvider', '$logProvider', function ($locationProvider,$logProvider) {
-       $locationProvider.html5Mode(true);
-       $logProvider.debugEnabled(true)
-    }]);
+    .module('osicApp', ['ui.bootstrap', 'ngTable', 'angularMoment', 'ngRoute'])
+    .constant('config', {
+      appName: 'OSICAlytics',
+      appVersion: '0.9.1',
+      apiTunnelUrl: '/api_tunnel.php?q=',
+      apiStackalyticsUrl: 'http://stackalytics.com/api/1.0'
+    })
+    .config(function($sceDelegateProvider) {
+      $sceDelegateProvider.resourceUrlWhitelist([
+        'self',
+        'http://stackalytics.com/**'
+      ]);
+    });
 
-})();
-
-
-(function() {
-  'use strict';
-
-  angular
-    .module('osicApp')
-    .controller('liveCtrl', liveCtrl);
-
-  function liveCtrl($scope, $http, myFactory, $q, $location, NgTableParams) {
-    /*
-    $scope.liveCommits = [
-      { title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel'},
-      { title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel'},
-      { title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'rax'},
-      { title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel'},
-      { title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'rax'}
-    ];
-
-    $scope.liveReviews = [
-      { title: 'Interesting Patch1', author_name: 'ediardo', value: '+1', company: 'rax'},
-      { title: 'Interesting Patch2', author_name: 'ediardo', value: '+2', company: 'intel'},
-      { title: 'Interesting Patch3', author_name: 'ediardo', value: '+1', company: 'rax'},
-      { title: 'Interesting Patch4', author_name: 'ediardo', value: '-1', company: 'rax'},
-      { title: 'Boring Patch 5', author_name: 'ediardo', value: '-2', company: 'intel'}
-    ];
-
-    $scope.liveBlueprints = [
-      { title: 'Awesome BP', author_name: 'ediardo', company: 'rax', action: 'drafted', priority: 'high'},
-      { title: 'Incredible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'essential'},
-      { title: 'Fantastic BP', author_name: 'ediardo', company: 'rax', action: 'drafted', priority: 'high'},
-      { title: 'Terrible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'medium'},
-      { title: 'Good BP', author_name: 'ediardo', company: 'rax', action: 'completed', priority: 'low'}
-    ];
-
-    $scope.liveBugs = [
-      { title: 'Huge Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high'},
-      { title: 'I hate this Bug', author_name: 'ediardo', company: 'intel', action: 'filed', priority: 'critical'},
-      { title: 'Poisonous Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high'},
-      { title: 'Funny bug', author_name: 'ediardo', company: 'intel', action: 'filed', priority: 'medium'},
-      { title: 'A hard-to-fix bug', author_name: 'ediardo', company: 'rax', action: 'filed', priority: 'low'}
-    ];
-    */
-    /*
-    $scope.live = [
-      { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-      { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-      { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'rax', module: 'horizon'},
-      { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-      { type: 'mark', title: 'Interesting Patch1', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-      { type: 'mark', title: 'Interesting Patch2', author_name: 'ediardo', value: '+2', company: 'intel', module: 'horizon'},
-      { type: 'mark', title: 'Interesting Patch3', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-      { type: 'mark', title: 'Boring Patch 5', author_name: 'ediardo', value: '-2', company: 'intel', module: 'horizon'},
-      { type: 'bp', title: 'Awesome BP', author_name: 'ediardo', company: 'rax', action: 'drafted', priority: 'high', module: 'horizon'},
-      { type: 'bp', title: 'Incredible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'essential', module: 'horizon'},
-      { type: 'bp', title: 'Terrible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'medium', module: 'horizon'},
-      { type: 'bp', title: 'Good BP', author_name: 'ediardo', company: 'rax', action: 'completed', priority: 'low', module: 'horizon'},
-      { type: 'bug', title: 'Huge Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-      { type: 'bug', title: 'I hate this Bug', author_name: 'ediardo', company: 'intel', action: 'filed', priority: 'critical', module: 'horizon'},
-      { type: 'bug', title: 'Poisonous Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-      { type: 'bug', title: 'A hard-to-fix bug', author_name: 'ediardo', company: 'rax', action: 'filed', priority: 'low', module: 'horizon'}
-    ];
-
-    $scope.getLiveFeed = function() {
-      console.log('asdasdaasdsaas');
-      var promises = [];
-
-      $scope.loading = true;
-      myFactory.getDetails({
-        start_date: $scope.startDate.getTime() / 1000,
-        end_date: $scope.endDate.getTime() / 1000,
-        metric: metric,
-        release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
-        page_size: 0
-      }).then(function (details) {
-        console.log(details);
-        if (metric == 'commits') {
-        } else if (metric == 'bpc') {
-        } else if (metric == 'bpd') {
-        } else if (metric == 'resolved-bugs') {
-        } else if (metric == 'filed-bugs') {
-        } else if (metric == 'marks') {
-        }
-        $scope.loading = false;
-      });
-    }
-
-    */
-  }
 
 })();
 
@@ -109,7 +27,7 @@
     .module('osicApp')
     .controller('scoreCtrl', scoreCtrl);
 
-  function scoreCtrl($scope, $http, myFactory, $q, $location, NgTableParams) {
+  function scoreCtrl($scope, $http, myFactory, $q, $location, NgTableParams, moment, $interval, config) {
       var users = {},
           metrics = [
             {code: 'commits', name: 'Commits'},
@@ -129,11 +47,19 @@
             {name: 'Part-time', dedicated: false}
           ];
 
+      if (location.hostname == 'localhost' || location.hostname == '127.0.0.1') {
+        myFactory.setAPIUrl(config.apiStackalyticsUrl);
+        myFactory.setIsTunnelingEnabled(false);
+      } else {
+        myFactory.setAPIUrl(config.apiTunnelUrl);
+        myFactory.setIsTunnelingEnabled(true);
+      }
+
       $scope.tabs = [
         {title: 'LIVE', templateUrl: '/static/partials/live.html', select: 'getLiveFeed()' }
       ];
+
       $scope.init = function (){
-        console.log('asda');
         $scope.allocations = allocations;
         $scope.hats = hats;
         $scope.popupStartDate = {opened: false};
@@ -144,17 +70,21 @@
         $scope.members = [];
         // This variable holds filtered members by the user
         $scope.filteredMembers = [];
+
+        // Sets a valid API Url if app used in dev mode (localhost) or prod.
+
+        console.log(myFactory.getAPIUrl());
       }
 
-      var groupsD = $http.get('groups.json').then(function(response) {
+      var groupsD = $http.get('/groups.json').then(function(response) {
         $scope.osicGroups = response.data.groups;
       });
 
-      var projectsD = $http.get('projects.json').then(function(response){
+      var projectsD = $http.get('/projects.json').then(function(response) {
         $scope.osicModules = response.data.projects;
       });
 
-      var membersD = $http.get('members.json').then(function(response){
+      var membersD = $http.get('/members.json').then(function(response) {
         $scope.members = response.data.members;
       });
 
@@ -163,7 +93,7 @@
             startDate = new Date($location.search().start_date * 1000),
             endDate = new Date($location.search().end_date * 1000);
 
-        if(isNaN(startDate) && isNaN(endDate)) {
+        if (isNaN(startDate) && isNaN(endDate)) {
           $scope.setTimeFrame('currentWeek');
         } else {
           $scope.startDate = startDate;
@@ -200,25 +130,14 @@
         }
       })
 
-      $http({
-        method: 'JSONP',
-        url:'http://stackalytics.com/api/1.0/modules?callback=JSON_CALLBACK'
-      }).then(function (response){
-        $scope.modules = response.data.data
-      })
-
-      $http({
-        method: 'JSONP',
-        url:'http://stackalytics.com/api/1.0/releases?callback=JSON_CALLBACK'
-      }).then(function (response){
-        $scope.releases = response.data.data.splice(1, response.data.data.length)
-      })
+      $scope.modules = myFactory.getModules();
+      $scope.releases = myFactory.getReleases();
 
       $scope.openStartDate = function() {
         $scope.popupStartDate.opened = true;
       };
 
-      $scope.openEndDate= function() {
+      $scope.openEndDate = function() {
         $scope.popupEndDate.opened = true;
       };
 
@@ -340,8 +259,6 @@
         $q.all([membersD]).then(function() {
           var promises = [];
           $scope.loading = true;
-          //angular.element(document.querySelectorAll('#overlay')).addClass('-show-overlay'); // Adds .disabled
-
           if ($scope.filteredMembers.length == 0) {
             console.log('All members');
             myFactory.setMembers($scope.members);
@@ -420,58 +337,39 @@
 
       };
 
-      $scope.live = [
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'rax', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch1', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch2', author_name: 'ediardo', value: '+2', company: 'intel', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch3', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-        { type: 'mark', title: 'Boring Patch 5', author_name: 'ediardo', value: '-2', company: 'intel', module: 'horizon'},
-        { type: 'bp', title: 'Awesome BP', author_name: 'ediardo', company: 'rax', action: 'drafted', priority: 'high', module: 'horizon'},
-        { type: 'bp', title: 'Incredible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'essential', module: 'horizon'},
-        { type: 'bp', title: 'Terrible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'medium', module: 'horizon'},
-        { type: 'bp', title: 'Good BP', author_name: 'ediardo', company: 'rax', action: 'completed', priority: 'low', module: 'horizon'},
-        { type: 'bug', title: 'Huge Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-        { type: 'bug', title: 'I hate this Bug', author_name: 'ediardo', company: 'intel', action: 'filed', priority: 'critical', module: 'horizon'},
-        { type: 'bug', title: 'Poisonous Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-        { type: 'bug', title: 'A hard-to-fix bug', author_name: 'ediardo', company: 'rax', action: 'filed', priority: 'low', module: 'horizon'}
-      ];
-
       $scope.getLiveFeed = function() {
-        console.log('Livefeed');
         var promises = [],
             details = [],
-            liveMetrics = ['commits', 'bpc', 'bpd', 'resolved-bugs', 'filed-bugs', 'marks'];
+            liveMetrics = ['commits', 'bpc', 'bpd', 'resolved-bugs', 'filed-bugs', 'marks', 'patches'];
 
-        $scope.loading = true;
-        angular.forEach(liveMetrics, function(metric) {
-          console.log('getting  ' + metric);
-          promises.push(
-            myFactory.getDetails({
-              start_date: $scope.startDate.getTime() / 1000,
-              end_date: $scope.endDate.getTime() / 1000,
-              metric: metric,
-              release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
-              page_size: 10
+          $scope.loading = true;
+          angular.forEach(liveMetrics, function(metric) {
+            console.log('getting  ' + metric);
+            promises.push(
+              myFactory.getDetails({
+                start_date: $scope.startDate.getTime() / 1000,
+                end_date: $scope.endDate.getTime() / 1000,
+                metric: metric,
+                release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
+                page_size: 10
+              })
+            );
+          });
+
+          $q.all(promises).then(function (metrics) {
+            var liveFeedObjs = [];
+            $scope.loading = false;
+            angular.forEach(metrics, function (metric, key) {
+              liveFeedObjs.push(metric.activity);
+            });
+
+            liveFeedObjs = liveFeedObjs.reduce(function(a, b) {
+              return a.concat(b);
             })
-          );
-        });
-
-        $q.all(promises).then(function (metrics) {
-          /*
-          $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
-          console.log($scope.metrics);
-          //angular.element(document.querySelectorAll('#overlay')).removeClass('-show-overlay');
-          $scope.loading = false;
-          charts.sunburst("#chartContainer", $scope.metrics)
-          */
-          $scope.loading = false;
-          console.log('COmpleted All');
-          console.log(metrics);
-        });
-
+            console.log('COmpleted All');
+            $scope.liveFeed = liveFeedObjs;
+            console.log($scope.liveFeed);
+          });
       };
 
     };
@@ -492,7 +390,8 @@
     .module('osicApp')
     .factory('myFactory', function($http, $q) {
       var service = {},
-          baseUrl = 'http://stackalytics.com/api/1.0',
+          _baseUrl,
+          _isTunnelingEnabled,
           _finalUrls = {},
           _release,
           _metricsType,
@@ -505,6 +404,22 @@
           _modules = [],
           _osicModules = [],
           _osicGroups = [];
+
+      service.setAPIUrl = function(url) {
+        _baseUrl = url;
+      }
+
+      service.getAPIUrl = function() {
+        return _baseUrl;
+      }
+
+      service.setIsTunnelingEnabled = function(status) {
+        _isTunnelingEnabled = status;
+      }
+
+      service.getIsTunnelingEnabled = function() {
+        return _isTunnelingEnabled;
+      }
 
       service.setMembers = function(members) {
         _members = members;
@@ -528,7 +443,7 @@
         Returns a string with URL pointing to Stackalytics API
       */
       var buildUrl = function(url, params) {
-        return baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all&callback=JSON_CALLBACK';
+        return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
       };
 
       /*
@@ -591,7 +506,10 @@
       service.getMetric = function(params) {
         var url = buildUrl('/stats/engineers', params);
         console.log(url);
-        return $http.jsonp(url).then(function(response) {
+        return $http({
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP',
+          url: url
+        }).then(function(response) {
           var data = filterData(response.data.stats, 'id', params.metric);
           return prepareData(data, {metric_code: params.metric, company: params.company });
         });
@@ -601,30 +519,40 @@
         Get Details
       */
       service.getDetails = function(params) {
+        var url;
+        console.log(url);
         params.user_id = _members.filter(function(member) {
+          // Discard managers and other people not contributing Upstream
           if (member.valid_id && !(member.project.includes('Mgmt') || member.group.includes('OSIC'))) {
             return true;
-          } else {
-            return false;
           }
+          return false;
         }).map(function(member) { return member.launchpad_id; }).join(',');
-        console.log(params.user_id.split(',').length);
-        var url = buildUrl('/activity', params);
+        url = buildUrl('/activity', params);
         console.log(url);
-        return $http.jsonp(url).then(function(response) {
+        return $http({
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP',
+          url: url
+        }).then(function(response) {
           return response.data;
         });
       }
       service.getOsicProjects = function(params) {
         var url = '/projects.json';
-        return $http.get(url).then(function(response) {
+        return $http({
+          method: 'GET',
+          url: url
+        }).then(function(response) {
           return response.data.projects;
         })
       };
 
       service.getOsicGroups = function (params) {
         var url = '/groups.json';
-        return $http.get(url).then(function (response) {
+        return $http({
+          method: 'GET',
+          url: url
+        }).then(function (response) {
           return response.data.groups;
         })
       };
@@ -633,6 +561,33 @@
         _osicModules = osicModules;
       }
 
+      /*
+       *  Gets a list of OpenStack modules
+       */
+      service.getModules = function() {
+        var url = buildUrl('/modules', {});
+        return $http({
+          url: url,
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP'
+        }).then(function(response) {
+          return response.data.data;
+        });
+      }
+
+      /*
+       *  Gets a list of OpenStack releases
+       */
+      service.getReleases = function() {
+        var url = buildUrl('/releases', {});
+        return $http({
+          url: url,
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP'
+        }).then(function(response) {
+          return response.data.data.splice(1, response.data.data.length);
+        });
+      }
+
+      // Come down to earth!
       return service;
     });
 
@@ -666,6 +621,37 @@
 
   angular
     .module('osicApp')
+    .directive('importance', function() {
+      return {
+        retrict: 'A',
+        scope: {
+            importance: '='
+        },
+        replace: 'true',
+        template: '<span class="label label-{{ color }} importance">{{ importance | uppercase }}</span>',
+        link: function(scope, element, attrs) {
+          if (['high', 'critical', 'essential'].indexOf(scope.importance.toLowerCase()) > -1 ) {
+            scope.color = 'danger';
+          } else if (scope.importance.toLowerCase() == 'medium') {
+            scope.color = 'warning';
+          } else if (scope.importance.toLowerCase() == 'low'){
+            scope.color = 'info';
+          } else {
+            scope.color = 'default';
+          }
+
+        }
+      }
+    });
+
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
     .directive('loading', function() {
       return {
         link: function(scope, element, attrs) {
@@ -676,6 +662,62 @@
               element.removeClass('-show-overlay');
             }
           });
+        }
+      }
+    });
+
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .directive('markValue', function() {
+      return {
+        retrict: 'A',
+        scope: {
+            markValue: '='
+        },
+        replace: 'true',
+        template: '<span class="label label-{{ color }} review-value">{{ markValue }}</span>',
+        link: function(scope, element, attrs) {
+          if (scope.markValue > 0) {
+            scope.color = 'success';
+            scope.markValue = '+' + scope.markValue.toString();
+          } else {
+            scope.color = 'danger';
+          }
+        }
+      }
+    });
+
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .directive('objTitle', function() {
+      return {
+        retrict: 'A',
+        scope: {
+            objTitle: '=',
+            objUrl: '=',
+            objType: '='
+        },
+        replace: 'true',
+        template: '<span class="label label-info object-title "><a href="{{ objUrl }}" target="_blank" title="Open link in a new tab">{{ objTitle }}</a></span>',
+        link: function(scope, element, attrs) {
+          if (scope.objTitle.length > 70) {
+            scope.objTitle = scope.objTitle.substring(0, 69) + '...';
+          }
+          if (scope.objType == 'commit') {
+            scope.objUrl = "https://review.openstack.org/#q," + scope.objUrl;
+          }
         }
       }
     });

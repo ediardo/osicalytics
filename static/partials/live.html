@@ -1,0 +1,57 @@
+<div id="liveTab">
+
+  <div class="row -margin-bottom">
+    <div class="col-xs-12">
+      <h1>OSIC <span class="label label-danger">LIVE</span></h1>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-xs-12" id="liveFeed">
+      <ul class="list-group">
+        <li class="list-group-item" ng-repeat="obj in liveFeed | orderBy: '-date' | limitTo: 15">
+
+          <!-- TODO: create a directive that can handle any kind of resource -->
+          <i class="fa icon-type" aria-hidden="true"
+            ng-class="{'fa-code': obj.record_type == 'commit',
+                      'fa-flask': obj.record_type == 'bp',
+                      'fa-bug': obj.record_type == 'bugr' || obj.record_type == 'bugf',
+                      'fa-eye': obj.record_type == 'mark',
+                      'fa-file-code-o': obj.record_type == 'patch'}"></i>
+
+            <span class="object-author" ng-class="obj.company_name == 'Intel' ? 'intel-color' : 'rax-color'">{{ obj.author_name }}</span>
+            <span ng-if="obj.record_type == 'commit'">
+              <span class="object-action">committed</span>
+              <span obj-title="obj.subject" obj-url="obj.change_id[0]" obj-type="obj.record_type"></span>
+            </span>
+
+            <span ng-if="obj.record_type == 'bugr' || obj.record_type == 'bugf'">
+              <span class="object-action" ng-if="obj.record_type == 'bugr'">fixed</span>
+              <span class="object-action" ng-if="obj.record_type == 'bugf'">filed</span>
+              the bug <span obj-title="obj.title" obj-url="obj.web_link"></span>
+              with <span importance="obj.importance"></span> priority
+            </span>
+            <span ng-if="obj.record_type == 'bpc' || obj.record_type == 'bpd' ">
+              <span class="object-action" ng-if="obj.record_type == 'bpd'">drafted</span>
+              <span class="object-action" ng-if="obj.record_type == 'bpc'">completed</span>
+              the BP <span obj-title="obj.title" obj-url="obj.parent_url"></span>
+            </span>
+            <span ng-if="obj.record_type == 'mark'">
+              <span class="object-action">reviewed</span> the patch <span obj-title="obj.parent_subject" obj-url="obj.parent_url"></span>
+              with a <span mark-value="obj.value"></span>
+            </span>
+
+            <span ng-if="obj.record_type == 'patch'">
+              <span class="object-action">proposed</span> the patch <span obj-title="obj.parent_subject" obj-url="obj.parent_url"></span>
+            </span>
+            in <span class="label label-default object-project">{{ obj.module }}</span>
+            <span class="label label-default object-project">{{ obj.release }}</span>
+            <span am-time-ago="obj.date * 1000"></span>
+
+          </li>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

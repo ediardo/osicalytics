@@ -10,6 +10,8 @@
     "grunt-contrib-watch": "^1.0.0"
   },
   "dependencies": {
+    "angular-moment": "^1.0.1",
+    "moment": "^2.17.1",
     "ng-table": "^1.0.0"
   }
 }

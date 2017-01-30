@@ -5,7 +5,7 @@
     .module('osicApp')
     .controller('scoreCtrl', scoreCtrl);
 
-  function scoreCtrl($scope, $http, myFactory, $q, $location, NgTableParams) {
+  function scoreCtrl($scope, $http, myFactory, $q, $location, NgTableParams, moment, $interval, config) {
       var users = {},
           metrics = [
             {code: 'commits', name: 'Commits'},
@@ -25,11 +25,19 @@
             {name: 'Part-time', dedicated: false}
           ];
 
+      if (location.hostname == 'localhost' || location.hostname == '127.0.0.1') {
+        myFactory.setAPIUrl(config.apiStackalyticsUrl);
+        myFactory.setIsTunnelingEnabled(false);
+      } else {
+        myFactory.setAPIUrl(config.apiTunnelUrl);
+        myFactory.setIsTunnelingEnabled(true);
+      }
+
       $scope.tabs = [
         {title: 'LIVE', templateUrl: '/static/partials/live.html', select: 'getLiveFeed()' }
       ];
+
       $scope.init = function (){
-        console.log('asda');
         $scope.allocations = allocations;
         $scope.hats = hats;
         $scope.popupStartDate = {opened: false};
@@ -40,17 +48,21 @@
         $scope.members = [];
         // This variable holds filtered members by the user
         $scope.filteredMembers = [];
+
+        // Sets a valid API Url if app used in dev mode (localhost) or prod.
+
+        console.log(myFactory.getAPIUrl());
       }
 
-      var groupsD = $http.get('groups.json').then(function(response) {
+      var groupsD = $http.get('/groups.json').then(function(response) {
         $scope.osicGroups = response.data.groups;
       });
 
-      var projectsD = $http.get('projects.json').then(function(response){
+      var projectsD = $http.get('/projects.json').then(function(response) {
         $scope.osicModules = response.data.projects;
       });
 
-      var membersD = $http.get('members.json').then(function(response){
+      var membersD = $http.get('/members.json').then(function(response) {
         $scope.members = response.data.members;
       });
 
@@ -59,7 +71,7 @@
             startDate = new Date($location.search().start_date * 1000),
             endDate = new Date($location.search().end_date * 1000);
 
-        if(isNaN(startDate) && isNaN(endDate)) {
+        if (isNaN(startDate) && isNaN(endDate)) {
           $scope.setTimeFrame('currentWeek');
         } else {
           $scope.startDate = startDate;
@@ -96,25 +108,14 @@
         }
       })
 
-      $http({
-        method: 'JSONP',
-        url:'http://stackalytics.com/api/1.0/modules?callback=JSON_CALLBACK'
-      }).then(function (response){
-        $scope.modules = response.data.data
-      })
-
-      $http({
-        method: 'JSONP',
-        url:'http://stackalytics.com/api/1.0/releases?callback=JSON_CALLBACK'
-      }).then(function (response){
-        $scope.releases = response.data.data.splice(1, response.data.data.length)
-      })
+      $scope.modules = myFactory.getModules();
+      $scope.releases = myFactory.getReleases();
 
       $scope.openStartDate = function() {
         $scope.popupStartDate.opened = true;
       };
 
-      $scope.openEndDate= function() {
+      $scope.openEndDate = function() {
         $scope.popupEndDate.opened = true;
       };
 
@@ -236,8 +237,6 @@
         $q.all([membersD]).then(function() {
           var promises = [];
           $scope.loading = true;
-          //angular.element(document.querySelectorAll('#overlay')).addClass('-show-overlay'); // Adds .disabled
-
           if ($scope.filteredMembers.length == 0) {
             console.log('All members');
             myFactory.setMembers($scope.members);
@@ -316,58 +315,39 @@
 
       };
 
-      $scope.live = [
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'rax', module: 'horizon'},
-        { type: 'commit', title: 'adfsasdfasdffdsasd', author_name: 'ediardo', company: 'intel', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch1', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch2', author_name: 'ediardo', value: '+2', company: 'intel', module: 'horizon'},
-        { type: 'mark', title: 'Interesting Patch3', author_name: 'ediardo', value: '+1', company: 'rax', module: 'horizon'},
-        { type: 'mark', title: 'Boring Patch 5', author_name: 'ediardo', value: '-2', company: 'intel', module: 'horizon'},
-        { type: 'bp', title: 'Awesome BP', author_name: 'ediardo', company: 'rax', action: 'drafted', priority: 'high', module: 'horizon'},
-        { type: 'bp', title: 'Incredible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'essential', module: 'horizon'},
-        { type: 'bp', title: 'Terrible BP', author_name: 'ediardo', company: 'intel', action: 'completed', priority: 'medium', module: 'horizon'},
-        { type: 'bp', title: 'Good BP', author_name: 'ediardo', company: 'rax', action: 'completed', priority: 'low', module: 'horizon'},
-        { type: 'bug', title: 'Huge Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-        { type: 'bug', title: 'I hate this Bug', author_name: 'ediardo', company: 'intel', action: 'filed', priority: 'critical', module: 'horizon'},
-        { type: 'bug', title: 'Poisonous Bug', author_name: 'ediardo', company: 'rax', action: 'fixed', priority: 'high', module: 'horizon'},
-        { type: 'bug', title: 'A hard-to-fix bug', author_name: 'ediardo', company: 'rax', action: 'filed', priority: 'low', module: 'horizon'}
-      ];
-
       $scope.getLiveFeed = function() {
-        console.log('Livefeed');
         var promises = [],
             details = [],
-            liveMetrics = ['commits', 'bpc', 'bpd', 'resolved-bugs', 'filed-bugs', 'marks'];
+            liveMetrics = ['commits', 'bpc', 'bpd', 'resolved-bugs', 'filed-bugs', 'marks', 'patches'];
 
-        $scope.loading = true;
-        angular.forEach(liveMetrics, function(metric) {
-          console.log('getting  ' + metric);
-          promises.push(
-            myFactory.getDetails({
-              start_date: $scope.startDate.getTime() / 1000,
-              end_date: $scope.endDate.getTime() / 1000,
-              metric: metric,
-              release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
-              page_size: 10
+          $scope.loading = true;
+          angular.forEach(liveMetrics, function(metric) {
+            console.log('getting  ' + metric);
+            promises.push(
+              myFactory.getDetails({
+                start_date: $scope.startDate.getTime() / 1000,
+                end_date: $scope.endDate.getTime() / 1000,
+                metric: metric,
+                release: $scope.selectedRelease ?  $scope.selectedRelease.id : 'all',
+                page_size: 10
+              })
+            );
+          });
+
+          $q.all(promises).then(function (metrics) {
+            var liveFeedObjs = [];
+            $scope.loading = false;
+            angular.forEach(metrics, function (metric, key) {
+              liveFeedObjs.push(metric.activity);
+            });
+
+            liveFeedObjs = liveFeedObjs.reduce(function(a, b) {
+              return a.concat(b);
             })
-          );
-        });
-
-        $q.all(promises).then(function (metrics) {
-          /*
-          $scope.metrics = myFactory.calculateMetrics([].concat.apply([], metrics));
-          console.log($scope.metrics);
-          //angular.element(document.querySelectorAll('#overlay')).removeClass('-show-overlay');
-          $scope.loading = false;
-          charts.sunburst("#chartContainer", $scope.metrics)
-          */
-          $scope.loading = false;
-          console.log('COmpleted All');
-          console.log(metrics);
-        });
-
+            console.log('COmpleted All');
+            $scope.liveFeed = liveFeedObjs;
+            console.log($scope.liveFeed);
+          });
       };
 
     };

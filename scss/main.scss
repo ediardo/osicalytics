@@ -4,6 +4,7 @@
 @import "layout/filters";
 @import "layout/tabs";
 @import "layout/live";
+@import "layout/summary";
 
 // VENDOR
 @import "vendor/bootstrap-datepicker3.min.css";
@@ -17,6 +18,7 @@ html, body {
   height: 100%;
 }
 body {
+  background: url(//osic.org/sites/all/themes/custom/osic_theme/images/OSIC_frame_ghost.png) no-repeat right center #edf2f7;
 }
 
 header {

@@ -12,7 +12,8 @@
     .module('osicApp')
     .factory('myFactory', function($http, $q) {
       var service = {},
-          baseUrl = 'http://stackalytics.com/api/1.0',
+          _baseUrl,
+          _isTunnelingEnabled,
           _finalUrls = {},
           _release,
           _metricsType,
@@ -25,6 +26,22 @@
           _modules = [],
           _osicModules = [],
           _osicGroups = [];
+
+      service.setAPIUrl = function(url) {
+        _baseUrl = url;
+      }
+
+      service.getAPIUrl = function() {
+        return _baseUrl;
+      }
+
+      service.setIsTunnelingEnabled = function(status) {
+        _isTunnelingEnabled = status;
+      }
+
+      service.getIsTunnelingEnabled = function() {
+        return _isTunnelingEnabled;
+      }
 
       service.setMembers = function(members) {
         _members = members;
@@ -48,7 +65,7 @@
         Returns a string with URL pointing to Stackalytics API
       */
       var buildUrl = function(url, params) {
-        return baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all&callback=JSON_CALLBACK';
+        return _baseUrl + url + '?' + paramsToQuery(params) + '&project_type=all';
       };
 
       /*
@@ -111,7 +128,10 @@
       service.getMetric = function(params) {
         var url = buildUrl('/stats/engineers', params);
         console.log(url);
-        return $http.jsonp(url).then(function(response) {
+        return $http({
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP',
+          url: url
+        }).then(function(response) {
           var data = filterData(response.data.stats, 'id', params.metric);
           return prepareData(data, {metric_code: params.metric, company: params.company });
         });
@@ -121,30 +141,40 @@
         Get Details
       */
       service.getDetails = function(params) {
+        var url;
+        console.log(url);
         params.user_id = _members.filter(function(member) {
+          // Discard managers and other people not contributing Upstream
           if (member.valid_id && !(member.project.includes('Mgmt') || member.group.includes('OSIC'))) {
             return true;
-          } else {
-            return false;
           }
+          return false;
         }).map(function(member) { return member.launchpad_id; }).join(',');
-        console.log(params.user_id.split(',').length);
-        var url = buildUrl('/activity', params);
+        url = buildUrl('/activity', params);
         console.log(url);
-        return $http.jsonp(url).then(function(response) {
+        return $http({
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP',
+          url: url
+        }).then(function(response) {
           return response.data;
         });
       }
       service.getOsicProjects = function(params) {
         var url = '/projects.json';
-        return $http.get(url).then(function(response) {
+        return $http({
+          method: 'GET',
+          url: url
+        }).then(function(response) {
           return response.data.projects;
         })
       };
 
       service.getOsicGroups = function (params) {
         var url = '/groups.json';
-        return $http.get(url).then(function (response) {
+        return $http({
+          method: 'GET',
+          url: url
+        }).then(function (response) {
           return response.data.groups;
         })
       };
@@ -153,6 +183,33 @@
         _osicModules = osicModules;
       }
 
+      /*
+       *  Gets a list of OpenStack modules
+       */
+      service.getModules = function() {
+        var url = buildUrl('/modules', {});
+        return $http({
+          url: url,
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP'
+        }).then(function(response) {
+          return response.data.data;
+        });
+      }
+
+      /*
+       *  Gets a list of OpenStack releases
+       */
+      service.getReleases = function() {
+        var url = buildUrl('/releases', {});
+        return $http({
+          url: url,
+          method: _isTunnelingEnabled ? 'GET' : 'JSONP'
+        }).then(function(response) {
+          return response.data.data.splice(1, response.data.data.length);
+        });
+      }
+
+      // Come down to earth!
       return service;
     });
 

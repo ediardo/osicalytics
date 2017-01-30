@@ -1,11 +1,16 @@
 #liveTab {
 
+  h1 {
+    margin-top: 0;
+  }
   #liveFeed {
-    font-size: 19px;
+
+    font-size: 18px;
 
     .icon-type {
       font-size: 1.5em;
       font-weight: bold;
+      margin-right: 15px;
     }
 
     .review-value {
@@ -13,16 +18,24 @@
     }
 
     .object-title {
-      font-size: 1.2em;
+      font-size: 1.15em;
+
+      a {
+        text-decoration: none;
+        color: #FFF;
+      }
     }
 
     .object-action {
       font-weight: bold;
-      font-size: 1.2em;
+      font-size: 1.15em;
     }
 
+    .object-project {
+      font-size: 1.15em;
+    }
     .object-author {
-      font-size: 1.3em;
+      font-size: 1.25em;
 
       &.intel-color {
         color: $intel-color;
@@ -42,11 +55,6 @@
 
   .panel-body {
     font-size: 18px;
-
-
-
-
-
   }
 
 }

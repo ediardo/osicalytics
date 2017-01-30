@@ -32,6 +32,14 @@ body {
   text-align: right;
 }
 
+.collapsable {
+  cursor: pointer;
+}
+
+.-margin-bottom {
+  margin-bottom: 15px;
+}
+
 .container-time-frames {
   margin-bottom: 15px;
 }
@@ -45,29 +53,46 @@ body {
   text-align: right;
 }
 
-.tab-content {
+#tabsContainer {
+  background-colo: #FFF;
+}
+#tabsContainer .nav-tabs {
+  font-size: 1.2em;
+}
+#tabsContainer .tab-content {
   margin-top: 15px;
 }
 
+#liveTab h1 {
+  margin-top: 0;
+}
 #liveTab #liveFeed {
-  font-size: 19px;
+  font-size: 18px;
 }
 #liveTab #liveFeed .icon-type {
   font-size: 1.5em;
   font-weight: bold;
+  margin-right: 15px;
 }
 #liveTab #liveFeed .review-value {
   font-size: 1.1em;
 }
 #liveTab #liveFeed .object-title {
-  font-size: 1.2em;
+  font-size: 1.15em;
+}
+#liveTab #liveFeed .object-title a {
+  text-decoration: none;
+  color: #FFF;
 }
 #liveTab #liveFeed .object-action {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.15em;
+}
+#liveTab #liveFeed .object-project {
+  font-size: 1.15em;
 }
 #liveTab #liveFeed .object-author {
-  font-size: 1.3em;
+  font-size: 1.25em;
 }
 #liveTab #liveFeed .object-author.intel-color {
   color: blue;
@@ -81,6 +106,14 @@ body {
 }
 #liveTab .panel-body {
   font-size: 18px;
+}
+
+#summaryTab .panel-summary .panel-body {
+  font-size: 20px;
+}
+#summaryTab .panel-summary .badge {
+  font-size: 1.1em;
+  background-color: #040508;
 }
 
 /*!
@@ -2941,6 +2974,10 @@ body {
 */
 html, body {
   height: 100%;
+}
+
+body {
+  background: url(//osic.org/sites/all/themes/custom/osic_theme/images/OSIC_frame_ghost.png) no-repeat right center #edf2f7;
 }
 
 header {

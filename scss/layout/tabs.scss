@@ -1,3 +1,12 @@
-.tab-content {
-  margin-top: 15px;
+#tabsContainer {
+  background-colo: #FFF;
+
+  .nav-tabs {
+    font-size: 1.2em;
+  }
+
+  .tab-content {
+    margin-top: 15px;
+  }
+
 }
