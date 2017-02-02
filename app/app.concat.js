@@ -88,7 +88,11 @@
         $scope.members = response.data.members;
       });
 
-      $q.all([groupsD, projectsD, membersD]).then(function() {
+      var releasesD = myFactory.getReleases().then(function(response) {
+        $scope.releases = response.data.data.splice(1, response.data.data.length);
+      });
+
+      $q.all([groupsD, projectsD, membersD, releasesD]).then(function() {
         var processFilters = false,
             startDate = new Date($location.search().start_date * 1000),
             endDate = new Date($location.search().end_date * 1000);
@@ -129,9 +133,6 @@
           $scope.onFilterChange();
         }
       })
-
-      $scope.modules = myFactory.getModules();
-      $scope.releases = myFactory.getReleases();
 
       $scope.openStartDate = function() {
         $scope.popupStartDate.opened = true;
@@ -582,8 +583,6 @@
         return $http({
           url: url,
           method: _isTunnelingEnabled ? 'GET' : 'JSONP'
-        }).then(function(response) {
-          return response.data.data.splice(1, response.data.data.length);
         });
       }
 

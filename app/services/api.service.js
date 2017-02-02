@@ -208,8 +208,6 @@
         return $http({
           url: url,
           method: _isTunnelingEnabled ? 'GET' : 'JSONP'
-        }).then(function(response) {
-          return response.data.data.splice(1, response.data.data.length);
         });
       }
 
