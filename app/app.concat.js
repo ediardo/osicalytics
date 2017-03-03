@@ -25,6 +25,173 @@
 
   angular
     .module('osicApp')
+    .controller('DetailsCtrl', detailsController);
+
+  function detailsController($scope, $rootScope, NgTableParams, config, myFactory) {
+    // TODO: Put logic of details of metrics here...
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .controller('FiltersCtrl', filtersCtrl);
+
+  function filtersCtrl($scope, $rootScope, NgTableParams, config, myFactory, magicDates, $location) {
+    console.log('filters');
+    // Triggered when user clicks on a pre-defined timeframe
+    $scope.setTimeFrame = function(timeFrame) {
+      var startEndDates = magicDates.getTimeframe(timeFrame);
+      $rootScope.startDate = startEndDates[0];
+      $rootScope.endDate = startEndDates[1];
+      // Dispatch the event upwards!
+      $scope.$emit('changedTimeframe', true);
+    }
+
+    // Trigerred when user selects a dropdown filter
+    $scope.onFilterChange = function() {
+      console.log('filerChanged');
+      $rootScope.filteredMembers = $rootScope.members;
+      console.log($rootScope.members);
+
+      // Group filters
+      if ($scope.selectedGroup != null && $scope.selectedGroup != undefined) {
+        $location.search('group', $scope.selectedGroup.name);
+        console.log('asdada');
+        $rootScope.filteredMembers = $rootScope.filteredMembers.filter(function(member) {
+          if (member.group.includes($scope.selectedGroup.name)) {
+            return member;
+          }
+        });
+      } else {
+        $location.search('group', '');
+      }
+      // Team filters
+      if ($scope.selectedModule != null && $scope.selectedModule != undefined) {
+        $location.search('team', $scope.selectedModule.name);
+        $rootScope.filteredMembers = $rootScope.filteredMembers.filter(function(member) {
+          if (member.project.includes($scope.selectedModule.name)){
+            return member;
+          }
+        });
+      } else {
+        $location.search('team', '');
+      }
+
+      // Company filter
+      if ($scope.selectedHat != null && $scope.selectedHat != undefined) {
+        $location.search('company', $scope.selectedHat.id);
+        $rootScope.filteredMembers = $rootScope.filteredMembers.filter(function(member){
+          if (member.hat.includes($scope.selectedHat.id)) {
+            return member;
+          }
+        });
+      } else {
+        $location.search('company', '');
+      }
+
+      // Allocations filter
+      if ($scope.selectedAllocation != null && $scope.selectedAllocation != undefined) {
+        $location.search('allocation', $scope.selectedAllocation.name);
+        $rootScope.filteredMembers = $rootScope.filteredMembers.filter(function(member){
+          if (member.dedicated == $scope.selectedAllocation.dedicated) {
+            return member;
+          }
+        });
+      } else {
+        $location.search('allocation', '');
+      }
+
+      if ($scope.filteredMembers.length > 0) {
+        myFactory.setMembers($rootScope.filteredMembers);
+      }
+      // Dispatch the event upwards!
+      $scope.$emit('changedFilters', true);
+    }
+
+    $scope.$watchCollection('[startDate, endDate]', function (newValues, oldValues) {
+      if ((newValues[0] !== undefined || newValues[1] !== undefined) && !(isNaN(newValues[0]) || isNaN(newValues[1]))) {
+          $location.search('start_date', $scope.startDate.getTime() / 1000);
+          $location.search('end_date', $scope.endDate.getTime() / 1000);
+          $scope.filters = true;
+      } else {
+        $scope.filters = false;
+      }
+    });
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .controller('LiveCtrl', liveCtrl);
+
+  function liveCtrl($scope, $rootScope, NgTableParams, config, myFactory, liveFeed, $q) {
+    // TODO: Put logic of details of metrics here...
+    console.log('live');
+    console.log(liveFeed);
+    /*
+    $q.all(liveFeed).then(function (metrics) {
+      var liveFeedObjs = [];
+      $scope.loading = false;
+      angular.forEach(metrics, function (metric, key) {
+        liveFeedObjs.push(metric.activity);
+      });
+      $scope.liveFeed = liveFeedObjs.reduce(function(a, b) {
+        return a.concat(b);
+      });
+    });
+    */
+    console.log('Live :' +$scope.liveFeed);
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .controller('RootCtrl', rootCtrl);
+
+  function rootCtrl($scope, $rootScope, NgTableParams, config, myFactory, init) {
+    // TODO: Put logic of details of metrics here...
+    $q.all(init).then(function(data) {
+      $rootScope.osicGroups = data[0].data.groups;
+      $rootScope.osicModules = data[1].data.projects;
+      $rootScope.members = data[2].data.members;
+      $rootScope.filteredMembers = $rootScope.members;
+      $rootScope.releases = data[3].data.data.splice(1, data[3].data.data.length);
+    });
+    console.log('adsfasfdfasd: ' + $rootScope);
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .controller('RosterCtrl', rosterController);
+
+  function rosterController($scope, $rootScope, NgTableParams, config, myFactory) {
+    // TODO: Put logic of details of metrics here...
+  }
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
     .controller('scoreCtrl', scoreCtrl);
 
   function scoreCtrl($scope, $http, myFactory, $q, $location, NgTableParams, moment, $interval, config) {
@@ -36,7 +203,9 @@
             {code: 'patches', name:'Patches'},
             {code: 'resolved-bugs', name: 'Resolved Bugs'},
             {code: 'filed-bugs', name: 'Filed Bugs'},
-            {code: 'marks', name: 'Reviews'}
+            {code: 'marks', name: 'Reviews'},
+            {code: 'loc', name: 'LOCs'},
+            {code: 'emails', name: 'Emails'}
           ],
           hats = [
             {text: "Intel", id: "Intel"},
@@ -376,6 +545,20 @@
 (function() {
   'use strict';
 
+  angular
+    .module('osicApp')
+    .controller('SummaryCtrl', summaryController);
+
+  function summaryController($scope, $rootScope, NgTableParams, config, myFactory) {
+    // TODO: Put logic of details of metrics here...
+
+  }
+})();
+
+
+(function() {
+  'use strict';
+
   /*
   TODO:
    - Remove unused variables/methods (ediardo)
@@ -590,6 +773,60 @@
       return service;
     });
 
+})();
+
+
+(function() {
+  'use strict';
+
+  angular
+    .module('osicApp')
+    .factory('magicDates', function() {
+
+      var service = {},
+          _startDate,
+          _endDate,
+          _today = new Date(),
+          _year = _today.getFullYear(),
+          _month = _today.getMonth(),
+          _day = _today.getDate(),
+          _quarter = Math.floor((_month + 3) / 3);
+
+      service.getTimeframe = function(timeFrame) {
+        /*
+         * TODO: Add other timeframes like currentRelease and currentYear
+         */
+        switch(timeFrame) {
+          case 'currentWeek':
+            _startDate = new Date(_year, _month, _day - _today.getDay());
+            _endDate = new Date(_year, _month, _day);
+            break;
+          case 'previousWeek':
+            _startDate = new Date(_year, _month, _day - _today.getDay() - 7);
+            _endDate= new Date(_year, _month, _day - _today.getDay() -1);
+            break;
+          case 'currentMonth':
+            _startDate = new Date(_year, _month, 1);
+            _endDate = new Date(_year, _month + 1, 0);
+            break;
+          case 'previousMonth':
+            _startDate = new Date(_year, _month - 1, 1);
+            _endDate = new Date(_year, _month, 0);
+            break;
+          case 'currentQuarter':
+            _startDate = new Date(_year, _quarter * 3 - 3, 1);
+            _endDate = new Date(_year, (_quarter + 1) * 3 - 3, 0);
+            break;
+          case 'previousQuarter':
+            _startDate = new Date(_year, (_quarter - 1) * 3 - 3 , 1);
+            _endDate = new Date(_year, _quarter  * 3 - 3, 0);
+            break;
+        }
+        return [_startDate, _endDate];
+      }
+
+      return service;
+    });
 })();
 
 

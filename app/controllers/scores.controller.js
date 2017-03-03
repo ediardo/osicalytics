@@ -14,7 +14,9 @@
             {code: 'patches', name:'Patches'},
             {code: 'resolved-bugs', name: 'Resolved Bugs'},
             {code: 'filed-bugs', name: 'Filed Bugs'},
-            {code: 'marks', name: 'Reviews'}
+            {code: 'marks', name: 'Reviews'},
+            {code: 'loc', name: 'LOCs'},
+            {code: 'emails', name: 'Emails'}
           ],
           hats = [
             {text: "Intel", id: "Intel"},

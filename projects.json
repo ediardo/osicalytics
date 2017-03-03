@@ -1,21 +1,23 @@
 {
   "projects": [
-    { "name": "Nova", "group": "compute" },
-    { "name": "Magnum", "group": "compute" },
-    { "name": "Glance", "group": "compute" },
-    { "name": "Ironic", "group": "compute" },
-    { "name": "OSA", "group": "deployment" },
-    { "name": "Ref Imp / Ops", "group": "deployment" },
-    { "name": "Horizon", "group": "metrics/ui" },
     { "name": "Ceilometer", "group": "metrics/ui" },
+    { "name": "Cinder", "group": "storage"},
     { "name": "Craton", "group": "metrics/ui" },
-    { "name": "Neutron", "group": "network/identity" },
-    { "name": "Octavia", "group": "network/identity" },
+    { "name": "Documentation", "group": "qa/docs/security"},
+    { "name": "Glance", "group": "compute" },
+    { "name": "Horizon", "group": "metrics/ui" },
+    { "name": "Ironic", "group": "compute" },
     { "name": "Keystone", "group": "network/identity" },
+    { "name": "Kolla", "group": "deployment" },
+    { "name": "Magnum", "group": "compute" },
+    { "name": "Neutron", "group": "network/identity" },
+    { "name": "Nova", "group": "compute" },
+    { "name": "Octavia", "group": "network/identity" },
+    { "name": "Ops", "group": "deployment" },
+    { "name": "OSA", "group": "deployment" },
     { "name": "QA", "group": "qa/docs/security" },
     { "name": "Security", "group": "qa/docs/security"},
-    { "name": "Documentation", "group": "qa/docs/security"},
-    { "name": "Cinder", "group": "storage"},
-    { "name": "Swift", "group": "storage"}
+    { "name": "Swift", "group": "storage"},
+    { "name": "Upgrades", "group": "network/identity"}
   ]
 }
